@@ -5,6 +5,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/build/${CMAKE_BUILD_TY
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/build/${CMAKE_BUILD_TYPE}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/build/${CMAKE_BUILD_TYPE}/bin")
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Third-party
 add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/glfw/ ${CMAKE_SOURCE_DIR}/build/${CMAKE_BUILD_TYPE}/glfw)
 
@@ -13,6 +16,7 @@ set(TREMBLE_VENDOR_CPP "${PROJECT_SOURCE_DIR}/vendor/loguru/loguru.cpp"
 
 add_executable(Tremble src/core/main.cpp
                        src/core/engine.cpp
+                       src/io/input_manager.cpp
                        src/io/window.cpp
                        src/util/log.cpp
                        src/rendering/GLContext.cpp

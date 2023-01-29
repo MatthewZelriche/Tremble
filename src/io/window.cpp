@@ -1,8 +1,8 @@
 #include "window.hpp"
 
 #include "../util/log.hpp"
+#include "input_manager.hpp"
 
-#include <GLFW/glfw3.h>
 #include <loguru.hpp>
 
 using namespace TR;
@@ -16,6 +16,7 @@ Window::Window() {
    if (!mHandle) { ABORT_F("Failed to construct GLFW Window! Cannot continue."); }
 
    mContext = std::make_unique<GLContext>(mHandle);
+   glfwSetKeyCallback(mHandle, InputManager::GLFWCallback);
 
    mID = GetNewID();
    DLOG_F(INFO, "Successfully constructed window with ID: %d", mID);

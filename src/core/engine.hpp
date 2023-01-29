@@ -1,8 +1,8 @@
 #pragma once
 
-#include <memory>
-
 #include "../io/window.hpp"
+
+#include <memory>
 
 namespace TR {
 

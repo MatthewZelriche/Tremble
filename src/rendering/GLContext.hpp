@@ -2,7 +2,7 @@
 
 #include <gl.h>
 
-class GLFWwindow;
+#include <GLFW/glfw3.h>
 
 namespace TR {
 

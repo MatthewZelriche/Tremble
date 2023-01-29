@@ -2,10 +2,9 @@
 
 #include <cstdint>
 #include <memory>
+#include <GLFW/glfw3.h>
 
 #include "../rendering/GLContext.hpp"
-
-class GLFWwindow;
 
 namespace TR {
 

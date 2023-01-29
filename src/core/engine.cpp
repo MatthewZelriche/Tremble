@@ -1,5 +1,7 @@
 #include "engine.hpp"
 
+#include "../io/input_manager.hpp"
+
 #include <loguru.hpp>
 
 using namespace TR;
@@ -10,9 +12,9 @@ Engine::Engine() {
    // TODO: Log rotating
    loguru::add_file("error_log.txt", loguru::Truncate, loguru::Verbosity_ERROR);
    loguru::add_file("verbose_log.txt", loguru::Truncate, loguru::Verbosity_MAX);
-   DLOG_F(INFO, "Successfully initialized logging module.");
+   DLOG_F(INFO, "Successfully initialized logging module");
 
-   // Create a new window
+   InputManager::Initialize();
    mWindow = std::make_unique<Window>();
 }
 
