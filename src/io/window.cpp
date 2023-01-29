@@ -21,6 +21,8 @@ Window::Window() {
    DLOG_F(INFO, "Successfully constructed window with ID: %d", mID);
 }
 
+bool Window::RequestedClose() { return glfwWindowShouldClose(mHandle); }
+
 void Window::PollEvents() { glfwPollEvents(); }
 
 Window::~Window() { glfwDestroyWindow(mHandle); }

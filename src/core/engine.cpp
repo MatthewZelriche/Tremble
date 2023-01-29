@@ -16,4 +16,8 @@ Engine::Engine() {
    mWindow = std::make_unique<Window>();
 }
 
-void Engine::Run() {}
+void Engine::Run() {
+   while (!mWindow->RequestedClose()) { mWindow->PollEvents(); }
+
+   DLOG_F(INFO, "Performing an orderly shutdown");
+}

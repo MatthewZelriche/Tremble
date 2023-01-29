@@ -18,9 +18,11 @@ class Window {
    Window(const Window &other) = delete;
    Window &Window::operator=(const Window &other) = delete;
 
-   static void PollEvents();
+   bool RequestedClose();
 
    inline GLContext *GetGLContext() { return mContext.get(); }
+
+   static void PollEvents();
 
   private:
    std::unique_ptr<GLContext> mContext {nullptr};
