@@ -15,4 +15,5 @@ readability-*,
 -readability-magic-numbers,
 -cppcoreguidelines-avoid-magic-numbers,
 -performance-no-int-to-ptr,
--readability-identifier-length'
+-readability-identifier-length,
+-clang-diagnostic-pragma-once-outside-header'
