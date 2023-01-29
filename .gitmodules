@@ -1,0 +1,6 @@
+[submodule "vendor/loguru"]
+	path = vendor/loguru
+	url = https://github.com/emilk/loguru.git
+[submodule "vendor/backward-cpp"]
+	path = vendor/backward-cpp
+	url = https://github.com/bombela/backward-cpp.git
