@@ -11,6 +11,9 @@ Engine::Engine() {
    loguru::add_file("error_log.txt", loguru::Truncate, loguru::Verbosity_ERROR);
    loguru::add_file("verbose_log.txt", loguru::Truncate, loguru::Verbosity_MAX);
    DLOG_F(INFO, "Successfully initialized logging module.");
+
+   // Create a new window
+   mWindow = std::make_unique<Window>();
 }
 
 void Engine::Run() {}

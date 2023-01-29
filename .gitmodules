@@ -4,3 +4,6 @@
 [submodule "vendor/backward-cpp"]
 	path = vendor/backward-cpp
 	url = https://github.com/bombela/backward-cpp.git
+[submodule "vendor/glfw"]
+	path = vendor/glfw
+	url = https://github.com/glfw/glfw.git
