@@ -19,3 +19,8 @@ https://github.com/glfw/glfw
 glad
 Public Domain
 https://github.com/Dav1dde/glad/
+
+glm
+Copyright (c) 2005 - G-Truc Creation
+MIT License
+https://github.com/g-truc/glm

@@ -6,17 +6,16 @@
 #include <unordered_map>
 #include <array>
 #include <cstdint>
-
-#include "../../util/vec.hpp"
+#include <glm/glm.hpp>
 
 namespace TR {
 
 using OptPair = std::optional<std::pair<std::string, std::string>>;
 
 struct FaceData {
-   std::array<Vec3lf, 3> planes {0};
+   std::array<glm::highp_dvec3, 3> planes;
    std::string texture;
-   std::array<Vec4lf, 2> uvs {0};
+   std::array<glm::highp_dvec4, 2> uvs;
    uint32_t texRot {0};
    uint32_t uScale {0};
    uint32_t vScale {0};

@@ -28,5 +28,6 @@ target_compile_definitions(Tremble PRIVATE LOGURU_THREADNAME_WIDTH=5
 target_include_directories(Tremble PRIVATE "${PROJECT_SOURCE_DIR}/vendor/loguru/"
                                            "${PROJECT_SOURCE_DIR}/vendor/backward-cpp"
                                            "${PROJECT_SOURCE_DIR}/vendor/glfw/include/"
-                                           "${PROJECT_SOURCE_DIR}/vendor/glad")
+                                           "${PROJECT_SOURCE_DIR}/vendor/glad"
+                                           "${PROJECT_SOURCE_DIR}/vendor/glm/")
 target_link_libraries(Tremble PRIVATE glfw)
