@@ -20,6 +20,7 @@ add_executable(Tremble src/core/main.cpp
                        src/io/window.cpp
                        src/util/log.cpp
                        src/rendering/GLContext.cpp
+                       src/world/map/map_file_parser.cpp
                        ${TREMBLE_VENDOR_CPP})
 target_compile_definitions(Tremble PRIVATE LOGURU_THREADNAME_WIDTH=5
                                            GLFW_INCLUDE_NONE=1)
