@@ -14,9 +14,9 @@ namespace TR {
 using OptPair = std::optional<std::pair<std::string, std::string>>;
 
 struct FaceData {
-   std::array<Vec3, 3> planes {0};
+   std::array<Vec3lf, 3> planes {0};
    std::string texture;
-   std::array<Vec4, 2> uvs {0};
+   std::array<Vec4lf, 2> uvs {0};
    uint32_t texRot {0};
    uint32_t uScale {0};
    uint32_t vScale {0};
@@ -42,8 +42,8 @@ class MapFileParser {
    FaceData ParseFaceData(std::string_view def);
    std::vector<MapEntity> mEntities;
 
-   const std::string halfPlaneFmt = "( %d %d %d ) ( %d %d %d ) ( %d %d %d ) %*s "
-                                    " [ %d %d %d %d ] [ %d %d %d %d ] %d %d %d";
+   const std::string halfPlaneFmt = "( %lf %lf %lf ) ( %lf %lf %lf ) ( %lf %lf %lf ) %*s "
+                                    " [ %lf %lf %lf %lf ] [ %lf %lf %lf %lf ] %d %d %d";
 };
 
 } // namespace TR
