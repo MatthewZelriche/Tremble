@@ -12,17 +12,29 @@ namespace TR {
 
 using OptPair = std::optional<std::pair<std::string, std::string>>;
 
+struct PlaneData {
+   glm::vec3 normal;
+   glm::vec3 point;
+   float dist;
+};
+
 struct FaceData {
-   std::array<glm::highp_dvec3, 3> planes;
+   PlaneData plane;
    std::string texture;
-   std::array<glm::highp_dvec4, 2> uvs;
+   std::array<glm::vec4, 2> uvs;
    uint32_t texRot {0};
    uint32_t uScale {0};
    uint32_t vScale {0};
 };
 
+struct Poly {
+   std::vector<glm::vec3> vertices;
+   std::vector<float> indices;
+};
+
 struct MapBrush {
    std::vector<FaceData> faceData;
+   std::vector<Poly> polys;
 };
 
 struct MapEntity {
@@ -30,19 +42,25 @@ struct MapEntity {
    std::unordered_map<std::string, std::string> properties;
 };
 
-class MapFileParser {
+class CSGMap {
   public:
-   MapFileParser(std::string_view filename);
+   CSGMap(std::string_view filename);
+
+   MapEntity &GetEntity(const std::string &classname);
 
   private:
-   MapEntity BuildEntity(std::ifstream &def);
+   void BuildEntity(std::ifstream &def);
    MapBrush BuildBrush(std::ifstream &def);
    OptPair ParseProperty(const std::string &line);
    FaceData ParseFaceData(std::string_view def);
-   std::vector<MapEntity> mEntities;
+   PlaneData ComputePlane(const glm::vec3 &p1, const glm::vec3 &p2, const glm::vec3 &p3);
+   std::optional<glm::vec3> HalfSpaceIntersect(PlaneData plane1, PlaneData plane2,
+                                               PlaneData plane3);
 
-   const std::string halfPlaneFmt = "( %lf %lf %lf ) ( %lf %lf %lf ) ( %lf %lf %lf ) %*s "
-                                    " [ %lf %lf %lf %lf ] [ %lf %lf %lf %lf ] %d %d %d";
+   std::unordered_map<std::string, MapEntity> mEntities;
+
+   const std::string halfPlaneFmt = "( %f %f %f ) ( %f %f %f ) ( %f %f %f ) %*s "
+                                    " [ %f %f %f %f ] [ %f %f %f %f ] %d %d %d";
 };
 
 } // namespace TR
