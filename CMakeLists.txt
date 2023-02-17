@@ -8,6 +8,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/build/${CMAKE_BUILD_TY
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_subdirectory("${PROJECT_SOURCE_DIR}/tools/map_builder")
+
 # Third-party
 add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/glfw/ ${CMAKE_SOURCE_DIR}/build/${CMAKE_BUILD_TYPE}/glfw)
 
@@ -28,6 +30,6 @@ target_compile_definitions(Tremble PRIVATE LOGURU_THREADNAME_WIDTH=5
 target_include_directories(Tremble PRIVATE "${PROJECT_SOURCE_DIR}/vendor/loguru/"
                                            "${PROJECT_SOURCE_DIR}/vendor/backward-cpp"
                                            "${PROJECT_SOURCE_DIR}/vendor/glfw/include/"
-                                           "${PROJECT_SOURCE_DIR}/vendor/glad"
-                                           "${PROJECT_SOURCE_DIR}/vendor/glm/")
+                                           "${PROJECT_SOURCE_DIR}/vendor/glad",
+                                           "${PROJECT_SOURCE_DIR}/vendor/glm"
 target_link_libraries(Tremble PRIVATE glfw)
