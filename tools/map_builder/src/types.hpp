@@ -11,6 +11,14 @@
 namespace TR {
 
 /****************************************************
+ * Types shared by both
+ ****************************************************/
+struct MapEntity {
+   std::optional<glm::vec3> origin;
+   std::unordered_map<std::string, std::string> properties;
+};
+
+/****************************************************
  * Types exclusive to the parser
  ****************************************************/
 struct PlaneEq {
@@ -32,9 +40,8 @@ struct Brush {
    std::vector<Plane> planes;
 };
 
-struct MapEntity {
-   std::optional<glm::vec3> origin;
-   std::unordered_map<std::string, std::string> properties;
+struct BrushEntity {
+   MapEntity entity;
    std::vector<Brush> brushes;
 };
 

@@ -12,7 +12,8 @@ int main() {
 
       // TODO: Geometry construction
    } catch (std::exception e) {
-      std::cout << "Failed to parse map file with err: " << e.what();
+      std::cout << "Failed to parse map file with error: " << e.what() << std::endl;
+      return -1;
    }
 
    std::cout << "Successfully built map file " << filepath << " into binary format."

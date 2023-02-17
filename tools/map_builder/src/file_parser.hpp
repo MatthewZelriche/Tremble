@@ -33,7 +33,7 @@ class MapFileParser {
     * @return A pair, whose key is the entity's classname, and the value is the entity
     * definition.
     */
-   std::pair<std::string, MapEntity> ParseEntity(std::ifstream &entityDef);
+   void ParseEntity(std::ifstream &entityDef);
    /**
     * @brief Parses a single property within an entity definition.
     * 
@@ -65,7 +65,10 @@ class MapFileParser {
    Plane ParsePlane(std::string_view def);
    PlaneEq ComputePlane(const glm::vec3 &p1, const glm::vec3 &p2, const glm::vec3 &p3);
 
-   std::unordered_map<std::string, MapEntity> mEntities;
+   bool mHasWorldspawn {false};
+   bool mMapVersionDefined {false};
+   std::vector<MapEntity> mNonBrushEntities;
+   std::vector<BrushEntity> mBrushEntities;
 };
 
 } // namespace TR

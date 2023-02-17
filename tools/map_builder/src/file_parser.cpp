@@ -23,24 +23,25 @@ MapFileParser::MapFileParser(std::string_view filename) {
 
       if (currLine == "{") {
          // Valid start of a new entity
-         mEntities.insert(ParseEntity(fileStream));
+         ParseEntity(fileStream);
       } else {
          // Unexpected error
          throw std::runtime_error("Unexpected start of new line");
       }
    }
 
-   // Sanity checks - must contain one worldspawn
-   if (mEntities.count("worldspawn") == 0) {
+   // Sanity check - must contain one worldspawn
+   if (!mHasWorldspawn) {
       throw std::runtime_error("Map file did not contain worldspawn");
+   } else if (!mMapVersionDefined) {
+      throw std::runtime_error("Map file did not contain version");
    }
 }
 
-std::pair<std::string, MapEntity> MapFileParser::ParseEntity(std::ifstream &entityDef) {
+void MapFileParser::ParseEntity(std::ifstream &entityDef) {
    MapEntity ent;
+   std::vector<Brush> brushes;
    std::string currLine;
-   std::string classname;
-   bool hasMapVersion = false;
 
    while (std::getline(entityDef, currLine)) {
       if (currLine.empty() || currLine.substr(0, 2) == "//") {
@@ -51,7 +52,7 @@ std::pair<std::string, MapEntity> MapFileParser::ParseEntity(std::ifstream &enti
       // Must be the start of a brush definition
       if (currLine == "{") {
          // New brush scope
-         ent.brushes.push_back(ParseBrush(entityDef));
+         brushes.push_back(ParseBrush(entityDef));
       }
       // Reached the end of this entity def, commit entity
       else if (currLine == "}") {
@@ -62,22 +63,28 @@ std::pair<std::string, MapEntity> MapFileParser::ParseEntity(std::ifstream &enti
          auto property = ParseProperty(currLine);
          if (property.first == "mapversion") {
             // Quick sanity check for correct map version
+            mMapVersionDefined = true;
             if (property.second != "220") {
                throw std::runtime_error("Invalid map version");
             }
-            hasMapVersion = true;
          }
          ent.properties.insert(property);
       }
    }
 
-   // Extract classname, no need to store it in the properties because
-   // its implicitly stored as this entity's key.
+   // TODO: Multithreading: Barrier to synchronize all properties parsed
+   // before checking for an origin?
+
+   // Every entity must have a classname
    if (ent.properties.count("classname") == 0) {
       throw std::runtime_error("Entity was lacking a classname property");
    }
-   classname = ent.properties["classname"];
-   ent.properties.erase("classname");
+   if (ent.properties["classname"] == "worldspawn") {
+      if (mHasWorldspawn) {
+         throw std::runtime_error("Map file contained multiple worldspawns");
+      }
+      mHasWorldspawn = true;
+   }
 
    // Extract origin, if it exists (not required), since its stored in a separate
    // vec3.
@@ -96,7 +103,14 @@ std::pair<std::string, MapEntity> MapFileParser::ParseEntity(std::ifstream &enti
       ent.origin = {x, y, z};
    }
 
-   return {classname, ent};
+   if (!brushes.empty()) {
+      BrushEntity brushEnt;
+      brushEnt.entity = ent;
+      brushEnt.brushes = std::move(brushes);
+      mBrushEntities.push_back(brushEnt);
+   } else {
+      mNonBrushEntities.push_back(ent);
+   }
 }
 
 Brush MapFileParser::ParseBrush(std::ifstream &def) {
