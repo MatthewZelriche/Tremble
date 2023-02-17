@@ -30,10 +30,9 @@ class MapFileParser {
     * @throw runtime_error if an unrecoverable parsing error occurs.
     * @param entityDef Position in the filestream where the entity definition
     * appears, starting at the line immediately after the opening brace.
-    * @return A pair, whose key is the entity's classname, and the value is the entity
-    * definition.
+    * @return A parsed brush entity.
     */
-   void ParseEntity(std::ifstream &entityDef);
+   BrushEntity ParseEntity(std::ifstream &entityDef);
    /**
     * @brief Parses a single property within an entity definition.
     * 
@@ -67,8 +66,7 @@ class MapFileParser {
 
    bool mHasWorldspawn {false};
    bool mMapVersionDefined {false};
-   std::vector<MapEntity> mNonBrushEntities;
-   std::vector<BrushEntity> mBrushEntities;
+   std::vector<BrushEntity> mEntities;
 };
 
 } // namespace TR

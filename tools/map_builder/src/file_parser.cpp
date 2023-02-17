@@ -23,24 +23,23 @@ MapFileParser::MapFileParser(std::string_view filename) {
 
       if (currLine == "{") {
          // Valid start of a new entity
-         ParseEntity(fileStream);
+         mEntities.push_back(ParseEntity(fileStream));
       } else {
          // Unexpected error
          throw std::runtime_error("Unexpected start of new line");
       }
    }
 
-   // Sanity check - must contain one worldspawn
+   // Sanity checks - must contain one worldspawn
    if (!mHasWorldspawn) {
       throw std::runtime_error("Map file did not contain worldspawn");
    } else if (!mMapVersionDefined) {
-      throw std::runtime_error("Map file did not contain version");
+      throw std::runtime_error("No map version defined in map file");
    }
 }
 
-void MapFileParser::ParseEntity(std::ifstream &entityDef) {
-   MapEntity ent;
-   std::vector<Brush> brushes;
+BrushEntity MapFileParser::ParseEntity(std::ifstream &entityDef) {
+   BrushEntity ent;
    std::string currLine;
 
    while (std::getline(entityDef, currLine)) {
@@ -52,7 +51,7 @@ void MapFileParser::ParseEntity(std::ifstream &entityDef) {
       // Must be the start of a brush definition
       if (currLine == "{") {
          // New brush scope
-         brushes.push_back(ParseBrush(entityDef));
+         ent.brushes.push_back(ParseBrush(entityDef));
       }
       // Reached the end of this entity def, commit entity
       else if (currLine == "}") {
@@ -63,10 +62,10 @@ void MapFileParser::ParseEntity(std::ifstream &entityDef) {
          auto property = ParseProperty(currLine);
          if (property.first == "mapversion") {
             // Quick sanity check for correct map version
-            mMapVersionDefined = true;
             if (property.second != "220") {
                throw std::runtime_error("Invalid map version");
             }
+            mMapVersionDefined = true;
          }
          ent.properties.insert(property);
       }
@@ -75,16 +74,13 @@ void MapFileParser::ParseEntity(std::ifstream &entityDef) {
    // TODO: Multithreading: Barrier to synchronize all properties parsed
    // before checking for an origin?
 
-   // Every entity must have a classname
+   // Extract classname, no need to store it in the properties because
+   // its implicitly stored as this entity's key.
    if (ent.properties.count("classname") == 0) {
       throw std::runtime_error("Entity was lacking a classname property");
    }
-   if (ent.properties["classname"] == "worldspawn") {
-      if (mHasWorldspawn) {
-         throw std::runtime_error("Map file contained multiple worldspawns");
-      }
-      mHasWorldspawn = true;
-   }
+   // Sanity check to ensure at least one worldspawn exists
+   if (ent.properties["classname"] == "worldspawn") { mHasWorldspawn = true; }
 
    // Extract origin, if it exists (not required), since its stored in a separate
    // vec3.
@@ -103,14 +99,7 @@ void MapFileParser::ParseEntity(std::ifstream &entityDef) {
       ent.origin = {x, y, z};
    }
 
-   if (!brushes.empty()) {
-      BrushEntity brushEnt;
-      brushEnt.entity = ent;
-      brushEnt.brushes = std::move(brushes);
-      mBrushEntities.push_back(brushEnt);
-   } else {
-      mNonBrushEntities.push_back(ent);
-   }
+   return ent;
 }
 
 Brush MapFileParser::ParseBrush(std::ifstream &def) {

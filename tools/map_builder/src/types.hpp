@@ -10,17 +10,6 @@
 
 namespace TR {
 
-/****************************************************
- * Types shared by both
- ****************************************************/
-struct MapEntity {
-   std::optional<glm::vec3> origin;
-   std::unordered_map<std::string, std::string> properties;
-};
-
-/****************************************************
- * Types exclusive to the parser
- ****************************************************/
 struct PlaneEq {
    glm::vec3 normal;
    glm::vec3 point;
@@ -41,13 +30,11 @@ struct Brush {
 };
 
 struct BrushEntity {
-   MapEntity entity;
+   std::optional<glm::vec3> origin;
+   std::unordered_map<std::string, std::string> properties;
    std::vector<Brush> brushes;
 };
 
-/****************************************************
- * Types exclusive to geometry constructor
- ****************************************************/
 struct VertexData {
    glm::vec3 vertices;
    glm::vec2 uvs;
@@ -57,5 +44,12 @@ struct Face {
    std::vector<VertexData> vertices;
    std::vector<uint16_t> indices;
 };
+
+struct BuiltEntity {
+   std::unordered_map<std::string, std::string> properties;
+   std::optional<Face> geo;
+};
+
+using SerializableData = std::vector<BuiltEntity>;
 
 } // namespace TR

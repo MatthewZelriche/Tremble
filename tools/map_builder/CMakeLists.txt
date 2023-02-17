@@ -9,5 +9,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(TrembleMapParser src/main.cpp
-                                src/file_parser.cpp)
+                                src/file_parser.cpp
+                                src/geometry_constructor.cpp)
 target_include_directories(TrembleMapParser PRIVATE "${CMAKE_SOURCE_DIR}/vendor/glm")
