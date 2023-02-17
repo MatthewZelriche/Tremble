@@ -132,7 +132,7 @@ Brush MapFileParser::ParseBrush(std::ifstream &def) {
 PlaneEq MapFileParser::ComputePlane(const glm::vec3 &p1, const glm::vec3 &p2,
                                     const glm::vec3 &p3) {
    PlaneEq equation;
-   equation.normal = glm::triangleNormal(p1, p2, p3);
+   equation.normal = glm::normalize(glm::cross(p3 - p2, p2 - p1));
    equation.point = p1;
    equation.dist = (equation.normal.x * -p1.x) + (equation.normal.y * -p1.y) +
                    (equation.normal.z * -p1.z);
