@@ -36,6 +36,25 @@ MapFileParser::MapFileParser(std::string_view filename) {
    } else if (!mMapVersionDefined) {
       throw std::runtime_error("No map version defined in map file");
    }
+
+   // Build geometry and finalize entities for serialization
+   std::cout << "Building geometry from planes..." << std::endl;
+   GeometryConstructor geoConstructor;
+   for (auto &ent : mEntities) {
+      // Copy the properties no matter what
+      BuiltEntity built;
+      built.properties = ent.properties;
+
+      if (ent.brushes.size() > 0) {
+         // Also need to build geo
+         built.geo = std::vector<std::vector<Face>>();
+         for (auto &brush : ent.brushes) {
+            built.geo.value().push_back(geoConstructor.Build(brush));
+         }
+      }
+
+      mBuiltEntities.push_back(built);
+   }
 }
 
 BrushEntity MapFileParser::ParseEntity(std::ifstream &entityDef) {
@@ -81,23 +100,6 @@ BrushEntity MapFileParser::ParseEntity(std::ifstream &entityDef) {
    }
    // Sanity check to ensure at least one worldspawn exists
    if (ent.properties["classname"] == "worldspawn") { mHasWorldspawn = true; }
-
-   // Extract origin, if it exists (not required), since its stored in a separate
-   // vec3.
-   if (ent.properties.count("origin") != 0) {
-      // TODO: Is this a problem for multithreading?
-      std::string originStr = ent.properties["origin"];
-      size_t firstDelimiter = originStr.find(" ");
-      float x = std::stof(originStr.substr(0, firstDelimiter));
-      size_t secondDelimiter = originStr.find(" ", firstDelimiter + 1);
-      float y = std::stof(
-          originStr.substr(firstDelimiter + 1, secondDelimiter - firstDelimiter + 1));
-      size_t thirdDelimiter = originStr.length();
-      float z = std::stof(
-          originStr.substr(secondDelimiter + 1, thirdDelimiter - secondDelimiter + 1));
-
-      ent.origin = {x, y, z};
-   }
 
    return ent;
 }

@@ -5,18 +5,22 @@
 #include <optional>
 #include <unordered_map>
 
-#include "file_parser.hpp"
+#include "types.hpp"
 
 namespace TR {
 
 class GeometryConstructor {
   public:
-   GeometryConstructor(const MapFileParser &parsedMap);
-   // TODO: Figure out a less dumb way to do this
-   SerializableData &&GetBuiltData();
+   GeometryConstructor();
+
+   std::vector<Face> Build(const Brush &brush);
 
   private:
-   SerializableData mData;
+   glm::ivec2 GetTextureDims(std::string texPathWithExt);
+   glm::vec2 ComputeTexCoords(const glm::vec3 &vert, const Plane &plane);
+   std::optional<glm::vec3> HalfSpaceIntersect(PlaneEq plane1, PlaneEq plane2,
+                                               PlaneEq plane3);
+   std::unordered_map<std::string, glm::vec2> mTexDimCache;
 };
 
 } // namespace TR

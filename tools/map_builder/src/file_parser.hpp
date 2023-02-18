@@ -4,6 +4,7 @@
 #include <optional>
 
 #include "types.hpp"
+#include "geometry_constructor.hpp"
 
 namespace TR {
 
@@ -67,6 +68,8 @@ class MapFileParser {
    bool mHasWorldspawn {false};
    bool mMapVersionDefined {false};
    std::vector<BrushEntity> mEntities;
+
+   std::vector<BuiltEntity> mBuiltEntities;
 };
 
 } // namespace TR

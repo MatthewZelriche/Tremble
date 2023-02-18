@@ -30,7 +30,6 @@ struct Brush {
 };
 
 struct BrushEntity {
-   std::optional<glm::vec3> origin;
    std::unordered_map<std::string, std::string> properties;
    std::vector<Brush> brushes;
 };
@@ -47,7 +46,7 @@ struct Face {
 
 struct BuiltEntity {
    std::unordered_map<std::string, std::string> properties;
-   std::optional<Face> geo;
+   std::optional<std::vector<std::vector<Face>>> geo;
 };
 
 using SerializableData = std::vector<BuiltEntity>;
