@@ -63,7 +63,6 @@ class MapFileParser {
     * @return A parsed plane struct.
     */
    Plane ParsePlane(std::string_view def);
-   PlaneEq ComputePlane(const glm::vec3 &p1, const glm::vec3 &p2, const glm::vec3 &p3);
 
    bool mHasWorldspawn {false};
    bool mMapVersionDefined {false};

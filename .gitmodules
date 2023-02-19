@@ -13,3 +13,6 @@
 [submodule "vendor/entt"]
 	path = vendor/entt
 	url = https://github.com/skypjack/entt.git
+[submodule "vendor/cereal"]
+	path = vendor/cereal
+	url = https://github.com/USCiLab/cereal.git

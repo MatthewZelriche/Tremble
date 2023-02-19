@@ -1,10 +1,13 @@
 #include "geometry_constructor.hpp"
 
 #include <glm/gtc/epsilon.hpp>
+#include <glm/gtx/vector_angle.hpp>
 #include <stdexcept>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
+#include "math_util.hpp"
 
 using namespace TR;
 
@@ -25,11 +28,8 @@ std::vector<Face> GeometryConstructor::Build(const Brush &brush) {
                    brush.planes.at(k).equation);
                if (vert.has_value()) {
                   for (int l = 0; l < numPlanes; l++) {
-                     float bab =
-                         glm::dot(brush.planes.at(l).equation.normal, vert.value());
-                     float dist = brush.planes.at(l).equation.dist;
-                     float ttl = bab + dist;
-                     if (ttl > 0) {
+                     if (PointPos(brush.planes.at(l).equation, vert.value()) ==
+                         PlanePos::FRONT) {
                         validVert = false;
                         break;
                      }
@@ -49,15 +49,75 @@ std::vector<Face> GeometryConstructor::Build(const Brush &brush) {
                      datak.uvs = ComputeTexCoords(datai.vertices, brush.planes.at(k));
 
                      faces.at(i).vertices.push_back(datai);
+                     faces.at(i).normalDir = brush.planes.at(i).equation.normal;
                      faces.at(j).vertices.push_back(dataj);
+                     faces.at(j).normalDir = brush.planes.at(j).equation.normal;
                      faces.at(k).vertices.push_back(datak);
+                     faces.at(k).normalDir = brush.planes.at(k).equation.normal;
                   }
                }
             }
          }
       }
    }
+
+   // Proper vertex winding
+   for (auto &face : faces) { face.vertices = SortVertices(face); }
+
    return faces;
+}
+
+PlanePos GeometryConstructor::PointPos(const PlaneEq &plane, const glm::vec3 &point) {
+   float temp = glm::dot(plane.normal, point);
+   float val = temp + plane.dist;
+   if (val > FLT_EPSILON) {
+      return PlanePos::FRONT;
+   } else if (val < -FLT_EPSILON) {
+      return PlanePos::BACK;
+   } else {
+      return PlanePos::ON;
+   }
+}
+
+// TODO: NOTE: Currently sorts counterclockwise, I think?
+std::vector<VertexData> GeometryConstructor::SortVertices(const Face &unsorted) {
+   std::vector<VertexData> sorted = unsorted.vertices;
+   glm::vec3 faceCenter = GetFaceCenter(unsorted);
+
+   for (int i = 0; i < unsorted.vertices.size() - 2; i++) {
+      glm::vec3 a = glm::normalize(unsorted.vertices.at(i).vertices - faceCenter);
+
+      double smallestAngle = FLT_MAX;
+      int smallestIdx = -1;
+
+      for (int j = i + 1; j < unsorted.vertices.size(); j++) {
+         glm::vec3 b = glm::normalize(unsorted.vertices.at(j).vertices - faceCenter);
+         float angle = glm::degrees(glm::angle(glm::normalize(a), glm::normalize(b)));
+
+         if (angle < smallestAngle) {
+            smallestAngle = angle;
+            smallestIdx = j;
+         }
+      }
+      std::swap(sorted[i + 1], sorted[smallestIdx]);
+   }
+
+   // Reverse based on normal
+   PlaneEq vertPlane =
+       ComputePlane(sorted[0].vertices, sorted[1].vertices, sorted[2].vertices);
+   if (glm::dot(vertPlane.normal, unsorted.normalDir) < 0) {
+      std::reverse(sorted.begin(), sorted.end());
+   }
+
+   return sorted;
+}
+
+glm::vec3 GeometryConstructor::GetFaceCenter(const Face &face) {
+   glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
+   for (const auto &vert : face.vertices) { center += vert.vertices; }
+   center /= face.vertices.size();
+
+   return center;
 }
 
 // TODO: IMPORTANT! Proper handling of texture directory

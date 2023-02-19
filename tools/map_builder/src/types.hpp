@@ -40,6 +40,7 @@ struct VertexData {
 };
 
 struct Face {
+   glm::vec3 normalDir;
    std::vector<VertexData> vertices;
    std::vector<uint16_t> indices;
 };

@@ -2,8 +2,11 @@
 
 #include <stdexcept>
 #include <fstream>
+#include <iostream>
 
 #include <glm/gtx/normal.hpp>
+
+#include "math_util.hpp"
 
 using namespace TR;
 
@@ -129,17 +132,6 @@ Brush MapFileParser::ParseBrush(std::ifstream &def) {
       throw std::runtime_error("Brush does not contain at least 4 plane definitions");
    }
    return brush;
-}
-
-PlaneEq MapFileParser::ComputePlane(const glm::vec3 &p1, const glm::vec3 &p2,
-                                    const glm::vec3 &p3) {
-   PlaneEq equation;
-   equation.normal = glm::normalize(glm::cross(p3 - p2, p2 - p1));
-   equation.point = p1;
-   equation.dist = (equation.normal.x * -p1.x) + (equation.normal.y * -p1.y) +
-                   (equation.normal.z * -p1.z);
-
-   return equation;
 }
 
 Plane MapFileParser::ParsePlane(std::string_view def) {

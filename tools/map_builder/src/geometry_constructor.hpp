@@ -9,6 +9,8 @@
 
 namespace TR {
 
+enum PlanePos { FRONT, BACK, ON };
+
 class GeometryConstructor {
   public:
    GeometryConstructor();
@@ -16,6 +18,9 @@ class GeometryConstructor {
    std::vector<Face> Build(const Brush &brush);
 
   private:
+   PlanePos PointPos(const PlaneEq &plane, const glm::vec3 &point);
+   glm::vec3 GetFaceCenter(const Face &face);
+   std::vector<VertexData> SortVertices(const Face &unsorted);
    glm::ivec2 GetTextureDims(std::string texPathWithExt);
    glm::vec2 ComputeTexCoords(const glm::vec3 &vert, const Plane &plane);
    std::optional<glm::vec3> HalfSpaceIntersect(PlaneEq plane1, PlaneEq plane2,
