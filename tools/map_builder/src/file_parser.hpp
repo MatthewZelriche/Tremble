@@ -3,7 +3,7 @@
 #include <string>
 #include <optional>
 
-#include "types.hpp"
+#include "lib_types.hpp"
 #include "geometry_constructor.hpp"
 
 namespace TR {

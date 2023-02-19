@@ -6,20 +6,14 @@
 #include <array>
 #include <optional>
 
-#include <glm/glm.hpp>
+#include "math.hpp"
 
 namespace TR {
-
-struct PlaneEq {
-   glm::vec3 normal;
-   glm::vec3 point;
-   float dist;
-};
 
 struct Plane {
    PlaneEq equation;
    std::string texturePath;
-   std::array<glm::vec4, 2> uvs;
+   std::array<Vec4, 2> uvs;
    uint32_t texRot {0};
    uint32_t uScale {0};
    uint32_t vScale {0};
@@ -35,12 +29,12 @@ struct BrushEntity {
 };
 
 struct VertexData {
-   glm::vec3 vertices;
-   glm::vec2 uvs;
+   Vec3 vertices;
+   Vec2 uvs;
 };
 
 struct Face {
-   glm::vec3 normalDir;
+   Vec3 normalDir;
    std::vector<VertexData> vertices;
    std::vector<uint16_t> indices;
 };

@@ -1,13 +1,9 @@
 #include "geometry_constructor.hpp"
 
-#include <glm/gtc/epsilon.hpp>
-#include <glm/gtx/vector_angle.hpp>
 #include <stdexcept>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
-#include "math_util.hpp"
 
 using namespace TR;
 
@@ -23,13 +19,13 @@ std::vector<Face> GeometryConstructor::Build(const Brush &brush) {
          for (int k = j; k <= numPlanes - 1; k++) {
             if (i != j != k) {
                bool validVert = true;
-               std::optional<glm::vec3> vert = HalfSpaceIntersect(
-                   brush.planes.at(i).equation, brush.planes.at(j).equation,
-                   brush.planes.at(k).equation);
+               std::optional<Vec3> vert = HalfSpaceIntersect(brush.planes.at(i).equation,
+                                                             brush.planes.at(j).equation,
+                                                             brush.planes.at(k).equation);
                if (vert.has_value()) {
                   for (int l = 0; l < numPlanes; l++) {
-                     if (PointPos(brush.planes.at(l).equation, vert.value()) ==
-                         PlanePos::FRONT) {
+                     if (GetPointPos(brush.planes.at(l).equation, vert.value()) ==
+                         PointPos::FRONT) {
                         validVert = false;
                         break;
                      }
@@ -67,32 +63,31 @@ std::vector<Face> GeometryConstructor::Build(const Brush &brush) {
    return faces;
 }
 
-PlanePos GeometryConstructor::PointPos(const PlaneEq &plane, const glm::vec3 &point) {
-   float temp = glm::dot(plane.normal, point);
-   float val = temp + plane.dist;
-   if (val > FLT_EPSILON) {
-      return PlanePos::FRONT;
-   } else if (val < -FLT_EPSILON) {
-      return PlanePos::BACK;
+PointPos GeometryConstructor::GetPointPos(const PlaneEq &plane, const Vec3 &point) {
+   float dist = SignedDistToPlane(plane, point);
+   if (dist > FLT_EPSILON) {
+      return PointPos::FRONT;
+   } else if (dist < -FLT_EPSILON) {
+      return PointPos::BACK;
    } else {
-      return PlanePos::ON;
+      return PointPos::ON;
    }
 }
 
 // TODO: NOTE: Currently sorts counterclockwise, I think?
 std::vector<VertexData> GeometryConstructor::SortVertices(const Face &unsorted) {
    std::vector<VertexData> sorted = unsorted.vertices;
-   glm::vec3 faceCenter = GetFaceCenter(unsorted);
+   Vec3 faceCenter = GetFaceCenter(unsorted);
 
    for (int i = 0; i < unsorted.vertices.size() - 2; i++) {
-      glm::vec3 a = glm::normalize(unsorted.vertices.at(i).vertices - faceCenter);
+      Vec3 a = Normalize(unsorted.vertices.at(i).vertices - faceCenter);
 
       double smallestAngle = FLT_MAX;
       int smallestIdx = -1;
 
       for (int j = i + 1; j < unsorted.vertices.size(); j++) {
-         glm::vec3 b = glm::normalize(unsorted.vertices.at(j).vertices - faceCenter);
-         float angle = glm::degrees(glm::angle(glm::normalize(a), glm::normalize(b)));
+         Vec3 b = Normalize(unsorted.vertices.at(j).vertices - faceCenter);
+         float angle = Angle(a, b);
 
          if (angle < smallestAngle) {
             smallestAngle = angle;
@@ -104,16 +99,16 @@ std::vector<VertexData> GeometryConstructor::SortVertices(const Face &unsorted) 
 
    // Reverse based on normal
    PlaneEq vertPlane =
-       ComputePlane(sorted[0].vertices, sorted[1].vertices, sorted[2].vertices);
-   if (glm::dot(vertPlane.normal, unsorted.normalDir) < 0) {
+       CreatePlane(sorted[0].vertices, sorted[1].vertices, sorted[2].vertices);
+   if (DotProduct(vertPlane.normal, unsorted.normalDir) < 0) {
       std::reverse(sorted.begin(), sorted.end());
    }
 
    return sorted;
 }
 
-glm::vec3 GeometryConstructor::GetFaceCenter(const Face &face) {
-   glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
+Vec3 GeometryConstructor::GetFaceCenter(const Face &face) {
+   Vec3 center = Vec3(0.0f, 0.0f, 0.0f);
    for (const auto &vert : face.vertices) { center += vert.vertices; }
    center /= face.vertices.size();
 
@@ -121,24 +116,23 @@ glm::vec3 GeometryConstructor::GetFaceCenter(const Face &face) {
 }
 
 // TODO: IMPORTANT! Proper handling of texture directory
-glm::vec2 GeometryConstructor::ComputeTexCoords(const glm::vec3 &vert,
-                                                const Plane &plane) {
-   glm::vec2 coords;
+Vec2 GeometryConstructor::ComputeTexCoords(const Vec3 &vert, const Plane &plane) {
+   Vec2 coords;
    auto dims = GetTextureDims(plane.texturePath + ".png");
 
-   coords.x = ((glm::dot(vert, glm::vec3(plane.uvs[0])) / dims.x) / plane.uScale) +
+   coords.x = ((DotProduct(vert, Vec3(plane.uvs[0])) / dims.x) / plane.uScale) +
               (plane.uvs[0].w / dims.x);
-   coords.y = ((glm::dot(vert, glm::vec3(plane.uvs[1])) / dims.y) / plane.vScale) +
+   coords.y = ((DotProduct(vert, Vec3(plane.uvs[1])) / dims.y) / plane.vScale) +
               (plane.uvs[1].w / dims.y);
 
    return coords;
 }
 
 // TODO: Could I only store the hash value for the string instead of the whole string?
-glm::ivec2 GeometryConstructor::GetTextureDims(std::string texPathWithExt) {
+IVec2 GeometryConstructor::GetTextureDims(std::string texPathWithExt) {
    if (mTexDimCache.count(texPathWithExt) != 0) { return mTexDimCache[texPathWithExt]; }
 
-   glm::ivec2 dims {0};
+   IVec2 dims {0};
    int channels = 0;
    if (!stbi_info(texPathWithExt.c_str(), &dims.x, &dims.y, &channels)) {
       throw std::runtime_error("Missing texture " + texPathWithExt);
@@ -149,15 +143,15 @@ glm::ivec2 GeometryConstructor::GetTextureDims(std::string texPathWithExt) {
 }
 
 // https://raw.githubusercontent.com/stefanha/map-files/master/MAPFiles.pdf
-std::optional<glm::vec3> GeometryConstructor::HalfSpaceIntersect(PlaneEq plane1,
-                                                                 PlaneEq plane2,
-                                                                 PlaneEq plane3) {
-   float denom = glm::dot(plane1.normal, glm::cross(plane2.normal, plane3.normal));
-   if (glm::epsilonEqual(denom, 0.0f, FLT_EPSILON)) { return std::nullopt; }
+std::optional<TR::Vec3> GeometryConstructor::HalfSpaceIntersect(PlaneEq plane1,
+                                                                PlaneEq plane2,
+                                                                PlaneEq plane3) {
+   float denom = DotProduct(plane1.normal, CrossProduct(plane2.normal, plane3.normal));
+   if (std::abs(denom - 0.0f) < FLT_EPSILON) { return std::nullopt; }
 
-   glm::vec3 vert = (-plane1.dist * glm::cross(plane2.normal, plane3.normal) -
-                     plane2.dist * glm::cross(plane3.normal, plane1.normal) -
-                     plane3.dist * glm::cross(plane1.normal, plane2.normal)) /
-                    denom;
+   Vec3 vert = (-plane1.dist * CrossProduct(plane2.normal, plane3.normal) -
+                plane2.dist * CrossProduct(plane3.normal, plane1.normal) -
+                plane3.dist * CrossProduct(plane1.normal, plane2.normal)) /
+               denom;
    return vert;
 }

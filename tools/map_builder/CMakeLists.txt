@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(TrembleMapParser src/main.cpp
                                 src/file_parser.cpp
                                 src/geometry_constructor.cpp
-                                src/math_util.cpp)
+                                src/math.cpp)
 target_include_directories(TrembleMapParser PRIVATE "${CMAKE_SOURCE_DIR}/vendor/glm"
                                                     "${CMAKE_SOURCE_DIR}/vendor/stb_image"
                                                     "${CMAKE_SOURCE_DIR}/vendor/cereal/include/")

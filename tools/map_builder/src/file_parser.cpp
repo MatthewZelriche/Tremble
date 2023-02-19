@@ -4,9 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-#include <glm/gtx/normal.hpp>
-
-#include "math_util.hpp"
+#include "math.hpp"
 
 using namespace TR;
 
@@ -143,9 +141,9 @@ Plane MapFileParser::ParsePlane(std::string_view def) {
    size_t textureEnd = def.find(" ", hsEnd + 2);
    plane.texturePath = def.substr(hsEnd + 2, textureEnd - (hsEnd + 2));
 
-   glm::vec3 p1;
-   glm::vec3 p2;
-   glm::vec3 p3;
+   Vec3 p1;
+   Vec3 p2;
+   Vec3 p3;
    // clang-format off
    int res = std::sscanf(def.data(), halfPlaneFmt.c_str(), &p1.x,
                                                            &p1.y,
@@ -168,7 +166,7 @@ Plane MapFileParser::ParsePlane(std::string_view def) {
                                                            &plane.uScale,
                                                            &plane.vScale);
    // clang-format on
-   plane.equation = ComputePlane(p1, p2, p3);
+   plane.equation = CreatePlane(p1, p2, p3);
 
    if (res != 20) { throw std::runtime_error("Malformatted half-space definition"); }
    return plane;
