@@ -5,10 +5,17 @@
 
 #include "serialization.hpp"
 
-int main() {
-   // TODO: Dehardcode filepath
-   std::string mapPath = "unnamed.map";
-   std::string compiledPath = "mymap.trmap";
+int main(int argc, char **argv) {
+   if (argc != 3) {
+      std::cout << "Incorrect number of arguments supplied" << std::endl;
+      std::cout
+          << "Example use: TrembleMapParser.exe <input-path>.map <output-path>.trmap"
+          << std::endl;
+      return -1;
+   }
+
+   std::string mapPath = std::string(argv[1]);
+   std::string compiledPath = std::string(argv[2]);
    std::cout << "Begin parsing " << mapPath << "..." << std::endl;
    try {
       TR::MapFileParser parser = TR::MapFileParser(mapPath);
