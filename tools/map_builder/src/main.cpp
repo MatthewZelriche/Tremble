@@ -3,19 +3,24 @@
 #include "file_parser.hpp"
 #include "geometry_constructor.hpp"
 
+#include "serialization.hpp"
+
 int main() {
    // TODO: Dehardcode filepath
-   std::string filepath = "unnamed.map";
-   std::cout << "Begin compiling " << filepath << "..." << std::endl;
+   std::string mapPath = "unnamed.map";
+   std::string compiledPath = "mymap.trmap";
+   std::cout << "Begin parsing " << mapPath << "..." << std::endl;
    try {
-      TR::MapFileParser parser = TR::MapFileParser(filepath);
-      std::cout << "Successfully completed parsing stage." << std::endl;
+      TR::MapFileParser parser = TR::MapFileParser(mapPath);
+      std::cout << "Begin serializing binary data to file " << compiledPath << std::endl;
+      parser.SaveToBinaryFile(compiledPath);
+      std::cout << "Successfully serialized binary data." << std::endl;
+
    } catch (std::exception e) {
       std::cout << "Failed to parse map file with error: " << e.what() << std::endl;
       return -1;
    }
 
-   std::cout << "Finished compiling map file " << filepath << " into binary format."
-             << std::endl;
+   std::cout << "Finished compiling map file " << mapPath << "." << std::endl;
    return 0;
 }

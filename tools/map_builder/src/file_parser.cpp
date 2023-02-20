@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "math.hpp"
+#include "serialization.hpp"
 
 using namespace TR;
 
@@ -38,6 +39,8 @@ MapFileParser::MapFileParser(std::string_view filename) {
       throw std::runtime_error("No map version defined in map file");
    }
 
+   std::cout << "Successfully parsed map file." << std::endl;
+
    // Build geometry and finalize entities for serialization
    std::cout << "Building geometry from planes..." << std::endl;
    GeometryConstructor geoConstructor;
@@ -56,6 +59,12 @@ MapFileParser::MapFileParser(std::string_view filename) {
 
       mBuiltEntities.push_back(built);
    }
+
+   std::cout << "Successfully built geometry and finalized entities." << std::endl;
+}
+
+void MapFileParser::SaveToBinaryFile(std::string_view filename) {
+   SerializeToDisk(filename, mBuiltEntities);
 }
 
 BrushEntity MapFileParser::ParseEntity(std::ifstream &entityDef) {

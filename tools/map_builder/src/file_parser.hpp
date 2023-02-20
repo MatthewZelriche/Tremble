@@ -19,6 +19,7 @@ class MapFileParser {
    * @param filename The path of the map file to parse.
    */
    MapFileParser(std::string_view filename);
+   void SaveToBinaryFile(std::string_view filename);
 
   private:
    /**
