@@ -8,11 +8,13 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/${CMAKE_BUILD_TYPE
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(TrembleMapParser src/main.cpp
-                                src/file_parser.cpp
-                                src/geometry_constructor.cpp
-                                src/math.cpp
-                                src/serialization.cpp)
-target_include_directories(TrembleMapParser PRIVATE "${CMAKE_SOURCE_DIR}/vendor/glm"
+add_library(TrembleMapParserLib STATIC src/lib/file_parser.cpp
+                                       src/lib/geometry_constructor.cpp
+                                       src/lib/math.cpp
+                                       src/lib/serialization.cpp)
+
+add_executable(TrembleMapParser src/main.cpp)
+target_include_directories(TrembleMapParserLib PUBLIC "${CMAKE_SOURCE_DIR}/vendor/glm"
                                                     "${CMAKE_SOURCE_DIR}/vendor/stb_image"
                                                     "${CMAKE_SOURCE_DIR}/vendor/cereal/include/")
+target_link_libraries(TrembleMapParser PUBLIC TrembleMapParserLib)

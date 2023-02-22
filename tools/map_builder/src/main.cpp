@@ -1,9 +1,7 @@
 #include <iostream>
 
-#include "file_parser.hpp"
-#include "geometry_constructor.hpp"
-
-#include "serialization.hpp"
+#include "lib/file_parser.hpp"
+#include "lib/serialization.hpp"
 
 int main(int argc, char **argv) {
    if (argc != 3) {
