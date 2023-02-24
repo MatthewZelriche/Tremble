@@ -35,6 +35,9 @@ struct VertexData {
 
 struct Face {
    Vec3 normalDir;
+   // TODO: Store an array of texture paths once, and only put a texture id in here,
+   // to save space and loading speed
+   std::string texturePath;
    std::vector<VertexData> vertices;
    std::vector<unsigned int> indices; // TODO: Performance considerations
 };

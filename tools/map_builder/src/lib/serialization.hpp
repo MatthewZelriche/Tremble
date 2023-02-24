@@ -28,7 +28,7 @@ void serialize(Archive &archive, TR::VertexData &vert) {
 
 template<class Archive>
 void serialize(Archive &archive, TR::Face &face) {
-   archive(face.normalDir, face.vertices, face.indices);
+   archive(face.normalDir, face.texturePath, face.vertices, face.indices);
 }
 
 template<class Archive>
