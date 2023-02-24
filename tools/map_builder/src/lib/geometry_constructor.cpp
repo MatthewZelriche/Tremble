@@ -65,9 +65,9 @@ std::vector<Face> GeometryConstructor::Build(const Brush &brush) {
 
 PointPos GeometryConstructor::GetPointPos(const PlaneEq &plane, const Vec3 &point) {
    float dist = SignedDistToPlane(plane, point);
-   if (dist > FLT_EPSILON) {
+   if (dist > BIG_EPS) {
       return PointPos::FRONT;
-   } else if (dist < -FLT_EPSILON) {
+   } else if (dist < -BIG_EPS) {
       return PointPos::BACK;
    } else {
       return PointPos::ON;

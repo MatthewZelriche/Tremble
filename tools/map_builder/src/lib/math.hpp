@@ -6,6 +6,13 @@
 
 namespace TR {
 
+// Need a substantially higher Epsilon, presumably because
+// we are doing everything in single-precision.
+// Hopefully this shouldn't be a problem, as its still well
+// below the minimum trenchbrom grid size of 0.125
+// TODO: May need to be tweaked
+constexpr float BIG_EPS = 0.0003f;
+
 using Vec3 = glm::vec3;
 using Vec4 = glm::vec4;
 using Vec2 = glm::vec2;
