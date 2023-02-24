@@ -14,9 +14,9 @@ struct Plane {
    PlaneEq equation;
    std::string texturePath;
    std::array<Vec4, 2> uvs;
-   uint32_t texRot {0};
-   uint32_t uScale {0};
-   uint32_t vScale {0};
+   float texRot {0};
+   float uScale {0};
+   float vScale {0};
 };
 
 struct Brush {

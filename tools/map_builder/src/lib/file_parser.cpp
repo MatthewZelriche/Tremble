@@ -143,7 +143,7 @@ Brush MapFileParser::ParseBrush(std::ifstream &def) {
 
 Plane MapFileParser::ParsePlane(std::string_view def) {
    static std::string halfPlaneFmt = "( %f %f %f ) ( %f %f %f ) ( %f %f %f ) %*s "
-                                     " [ %f %f %f %f ] [ %f %f %f %f ] %d %d %d";
+                                     " [ %f %f %f %f ] [ %f %f %f %f ] %f %f %f";
 
    Plane plane;
    size_t hsEnd = def.find_last_of(")");
