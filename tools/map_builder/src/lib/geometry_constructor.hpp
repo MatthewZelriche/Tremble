@@ -18,6 +18,7 @@ class GeometryConstructor {
    std::vector<Face> Build(const Brush &brush);
 
   private:
+   std::vector<unsigned int> GenerateIndices(const Face &face);
    PointPos GetPointPos(const PlaneEq &plane, const Vec3 &point);
    Vec3 GetFaceCenter(const Face &face);
    std::vector<VertexData> SortVertices(const Face &unsorted);

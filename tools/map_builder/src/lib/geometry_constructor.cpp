@@ -57,10 +57,32 @@ std::vector<Face> GeometryConstructor::Build(const Brush &brush) {
       }
    }
 
-   // Proper vertex winding
-   for (auto &face : faces) { face.vertices = SortVertices(face); }
+   for (auto &face : faces) {
+      // Before producing the indices, we should sort the faces verts
+      face.vertices = SortVertices(face);
+      face.indices = GenerateIndices(face);
+   }
 
    return faces;
+}
+
+std::vector<unsigned int> GeometryConstructor::GenerateIndices(const Face &face) {
+   std::vector<unsigned int> indices;
+   // Each face must consist of at least 1 triangle
+   // After accounting for this 1 guarunteed triangle, there are
+   // n-3 vertices remaining (can be zero)
+   int numTris = 1;
+   int remainingVerts = face.vertices.size() - 3;
+   // Each additional triangle in this face (if it exists) always adds exactly 1 vertex.
+   numTris += remainingVerts;
+   for (int i = 0; i < numTris; i++) {
+      // Each triangle has a predictable pattern
+      indices.push_back(0);
+      indices.push_back(i + 1);
+      indices.push_back(i + 2);
+   }
+
+   return indices;
 }
 
 PointPos GeometryConstructor::GetPointPos(const PlaneEq &plane, const Vec3 &point) {

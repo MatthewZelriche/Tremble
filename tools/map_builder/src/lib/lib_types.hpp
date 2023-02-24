@@ -36,7 +36,7 @@ struct VertexData {
 struct Face {
    Vec3 normalDir;
    std::vector<VertexData> vertices;
-   std::vector<uint16_t> indices;
+   std::vector<unsigned int> indices; // TODO: Performance considerations
 };
 
 struct BuiltEntity {
