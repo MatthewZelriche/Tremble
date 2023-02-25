@@ -125,7 +125,7 @@ std::vector<VertexData> GeometryConstructor::SortVertices(const Face &unsorted) 
    // Reverse based on normal
    PlaneEq vertPlane =
        CreatePlane(sorted[0].vertices, sorted[1].vertices, sorted[2].vertices);
-   if (DotProduct(vertPlane.normal, unsorted.normalDir) < 0) {
+   if (DotProduct(vertPlane.normal, unsorted.normalDir) > 0) {
       std::reverse(sorted.begin(), sorted.end());
    }
 
