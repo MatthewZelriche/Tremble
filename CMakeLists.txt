@@ -21,8 +21,10 @@ add_executable(Tremble src/core/main.cpp
                        src/io/input_manager.cpp
                        src/io/window.cpp
                        src/util/log.cpp
-                       src/rendering/GLContext.cpp
                        src/world/map/map_file_parser.cpp
+                       src/rendering/camera.cpp
+                       src/rendering/naive_renderer.cpp
+                       src/rendering/shader_program.cpp
                        ${TREMBLE_VENDOR_CPP})
 target_compile_definitions(Tremble PRIVATE LOGURU_THREADNAME_WIDTH=5
                                            GLFW_INCLUDE_NONE=1)
@@ -32,4 +34,5 @@ target_include_directories(Tremble PRIVATE "${PROJECT_SOURCE_DIR}/vendor/loguru/
                                            "${PROJECT_SOURCE_DIR}/vendor/glfw/include/"
                                            "${PROJECT_SOURCE_DIR}/vendor/glad",
                                            "${PROJECT_SOURCE_DIR}/vendor/glm"
+                                           "${PROJECT_SOURCE_DIR}/tools/map_builder/src/lib/")
 target_link_libraries(Tremble PRIVATE glfw TrembleMapParserLib)

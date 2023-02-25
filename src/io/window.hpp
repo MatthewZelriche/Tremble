@@ -4,8 +4,6 @@
 #include <memory>
 #include <GLFW/glfw3.h>
 
-#include "../rendering/GLContext.hpp"
-
 namespace TR {
 
 using WindowID = uint32_t;
@@ -16,15 +14,14 @@ class Window {
    ~Window();
    Window(const Window &other) = delete;
    Window &Window::operator=(const Window &other) = delete;
+   GLFWwindow *GetHandle() { return mHandle; }
+   void MakeContextCurrent() { glfwMakeContextCurrent(mHandle); }
 
    bool RequestedClose();
-
-   inline GLContext *GetGLContext() { return mContext.get(); }
 
    static void PollEvents();
 
   private:
-   std::unique_ptr<GLContext> mContext {nullptr};
    GLFWwindow *mHandle {nullptr};
    WindowID mID {0};
    inline static WindowID GetNewID() {

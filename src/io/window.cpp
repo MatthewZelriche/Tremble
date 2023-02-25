@@ -12,10 +12,9 @@ Window::Window() {
    glfwSetErrorCallback(GLFWErrorCallback);
    if (!glfwInit()) { ABORT_F("Failed to initialize GLFW! Cannot continue."); }
 
-   mHandle = glfwCreateWindow(800, 600, "Tremble", nullptr, nullptr);
+   mHandle = glfwCreateWindow(1280, 1024, "Tremble", nullptr, nullptr);
    if (!mHandle) { ABORT_F("Failed to construct GLFW Window! Cannot continue."); }
 
-   mContext = std::make_unique<GLContext>(mHandle);
    glfwSetKeyCallback(mHandle, InputManager::GLFWCallback);
 
    mID = GetNewID();
