@@ -16,3 +16,6 @@
 [submodule "vendor/cereal"]
 	path = vendor/cereal
 	url = https://github.com/USCiLab/cereal.git
+[submodule "vendor/PhysX"]
+	path = vendor/PhysX
+	url = https://github.com/NVIDIA-Omniverse/PhysX
