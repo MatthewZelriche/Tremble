@@ -1,6 +1,7 @@
 #include "geometry_constructor.hpp"
 
 #include <stdexcept>
+#include <algorithm>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -88,6 +89,8 @@ std::vector<unsigned int> GeometryConstructor::GenerateIndices(const Face &face)
    return indices;
 }
 
+#include <glm/glm.hpp>
+
 PointPos GeometryConstructor::GetPointPos(const PlaneEq &plane, const Vec3 &point) {
    float dist = SignedDistToPlane(plane, point);
    if (dist > BIG_EPS) {
@@ -99,28 +102,32 @@ PointPos GeometryConstructor::GetPointPos(const PlaneEq &plane, const Vec3 &poin
    }
 }
 
-// TODO: NOTE: Currently sorts counterclockwise, I think?
+// Sorts verts counterclockwise
 std::vector<VertexData> GeometryConstructor::SortVertices(const Face &unsorted) {
-   std::vector<VertexData> sorted = unsorted.vertices;
+   std::vector<VertexData> sorted = std::vector<VertexData>(unsorted.vertices);
    Vec3 faceCenter = GetFaceCenter(unsorted);
 
-   for (int i = 0; i < unsorted.vertices.size() - 2; i++) {
-      Vec3 a = Normalize(unsorted.vertices.at(i).vertices - faceCenter);
+   // from https://github.com/QodotPlugin/Qodot/blob/main/addons/qodot/src/core/GeoGenerator.cs
+   Vec3 wind = Normalize(unsorted.vertices[1].vertices - unsorted.vertices[0].vertices);
+   Vec3 normal = unsorted.normalDir;
+   std::sort(sorted.begin(), sorted.end(),
+             [wind, normal, faceCenter](VertexData l, VertexData r) {
+                Vec3 a = wind;
+                Vec3 b = CrossProduct(a, normal);
 
-      double smallestAngle = FLT_MAX;
-      int smallestIdx = -1;
+                Vec3 loc_a = l.vertices - faceCenter;
+                float a_pu = DotProduct(loc_a, a);
+                float a_pv = DotProduct(loc_a, b);
 
-      for (int j = i + 1; j < unsorted.vertices.size(); j++) {
-         Vec3 b = Normalize(unsorted.vertices.at(j).vertices - faceCenter);
-         float angle = Angle(a, b);
+                Vec3 loc_b = r.vertices - faceCenter;
+                float b_pu = DotProduct(loc_b, a);
+                float b_pv = DotProduct(loc_b, b);
 
-         if (angle < smallestAngle) {
-            smallestAngle = angle;
-            smallestIdx = j;
-         }
-      }
-      std::swap(sorted[i + 1], sorted[smallestIdx]);
-   }
+                float a_angle = std::atan2f(a_pv, a_pu);
+                float b_angle = std::atan2f(b_pv, b_pu);
+
+                return a_angle > b_angle ? false : true;
+             });
 
    // Reverse based on normal
    PlaneEq vertPlane =

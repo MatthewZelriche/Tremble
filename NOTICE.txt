@@ -11,10 +11,10 @@ licensing conditions:
     * glm:                      Copyright (c) 2005 - G-Truc Creation
                                 (https://github.com/g-truc/glm)
 
-    * map-files (snippets)      Copyright (c) 2001-2013 Stefan Hajnoczi
+    * map-files                 Copyright (c) 2001-2013 Stefan Hajnoczi
                                 (https://github.com/stefanha/map-files)
     
-    * Qodot (snippets)          Copyright 2023 Hannah "EMBYR" Crawford
+    * Qodot                     Copyright 2023 Hannah "EMBYR" Crawford
                                 Copyright 2019 Josh "Shifty" Palmer
                                 (https://github.com/QodotPlugin/Qodot)
 ==========================================================================================

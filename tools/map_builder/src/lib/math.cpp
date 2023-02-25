@@ -6,10 +6,6 @@ float TR::DotProduct(const Vec3 &v1, const Vec3 &v2) { return glm::dot(v1, v2); 
 
 TR::Vec3 TR::CrossProduct(const Vec3 &v1, const Vec3 &v2) { return glm::cross(v1, v2); }
 
-float TR::Angle(const Vec3 &v1, const Vec3 &v2) {
-   return glm::degrees(glm::angle(v1, v2));
-}
-
 TR::Vec3 TR::Normalize(const Vec3 &vector) { return glm::normalize(vector); }
 
 float TR::SignedDistToPlane(const PlaneEq &plane, const Vec3 &point) {
