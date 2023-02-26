@@ -8,6 +8,23 @@
 
 #include "../rendering/camera.hpp"
 
+#include "PxPhysicsAPI.h"
+#include "extensions/PxDefaultAllocator.h"
+
+using namespace physx;
+
+static PxDefaultAllocator gAllocator;
+
+class UserErrorCallback : public PxErrorCallback {
+  public:
+   virtual void reportError(PxErrorCode::Enum code, const char *message, const char *file,
+                            int line) {
+      // error processing implementation
+   }
+};
+
+static UserErrorCallback gCallback;
+
 using namespace TR;
 
 // Testing
@@ -59,6 +76,9 @@ Engine::Engine() {
          for (auto &face : brush) { mRenderer->AddMapFace(face); }
       }
    }
+
+   PxFoundation *mFoundation =
+       PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gCallback);
 }
 
 void Engine::Run() {

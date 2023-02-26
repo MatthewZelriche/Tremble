@@ -25,8 +25,8 @@ NaiveRenderer::NaiveRenderer() {
    // TODO: Events to inform of viewport changes.
    mContext.Viewport(0, 0, 1280, 1024);
 
-   mProgram = std::make_unique<ShaderProgram>("vert.glsl", "frag.glsl", mContext);
-
+   mProgram = std::make_unique<ShaderProgram>("res/shaders/vert.glsl",
+                                              "res/shaders/frag.glsl", mContext);
 #ifndef NDEBUG
    // Set up debug extension.
    if (!mContext.KHR_debug) {
