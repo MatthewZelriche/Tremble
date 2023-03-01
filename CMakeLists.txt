@@ -67,6 +67,8 @@ target_include_directories(Tremble PRIVATE "${PROJECT_SOURCE_DIR}/vendor/loguru/
                                            "${PROJECT_SOURCE_DIR}/vendor/PhysX/physx/include/")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    # Not set automatically on linux like MSVC does...needed for Physx
+    add_compile_definitions(_DEBUG)
     set(PHYX_BUILD_DIR_CONFIG "checked")
 endif()
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -82,6 +84,7 @@ else()
     set(PHYSX_LIB_EXT ".so")
 endif()
 
+message(${PHYSX_BUILD_DIR})
 target_link_libraries(Tremble PUBLIC 
                         glfw 
                         TrembleMapParserLib
