@@ -1,4 +1,5 @@
 #include <iostream>
+#include <filesystem>
 
 #include "lib/file_parser.hpp"
 #include "lib/serialization.hpp"
@@ -12,12 +13,20 @@ int main(int argc, char **argv) {
       return -1;
    }
 
-   std::string mapPath = std::string(argv[1]);
+   auto oldWorkingDir = std::filesystem::current_path();
+   auto mapPath = std::filesystem::path(std::string(argv[1]));
    std::string compiledPath = std::string(argv[2]);
+
+   // Switch working dir to be relative to map file
+   std::filesystem::current_path(mapPath.parent_path());
+
    std::cout << "Begin parsing " << mapPath << "..." << std::endl;
    try {
-      TR::MapFileParser parser = TR::MapFileParser(mapPath);
+      TR::MapFileParser parser = TR::MapFileParser(mapPath.filename().c_str());
       std::cout << "Begin serializing binary data to file " << compiledPath << std::endl;
+
+      // Restore original working dir
+      std::filesystem::current_path(oldWorkingDir);
       parser.SaveToBinaryFile(compiledPath);
       std::cout << "Successfully serialized binary data." << std::endl;
 
