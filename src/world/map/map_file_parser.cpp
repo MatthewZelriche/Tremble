@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iostream>
 #include <stack>
+#include <cstring>
 #include <glm/gtx/normal.hpp>
 #include <glm/gtc/epsilon.hpp>
 

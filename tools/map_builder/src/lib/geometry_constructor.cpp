@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <algorithm>
+#include <cmath>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -123,8 +124,8 @@ std::vector<VertexData> GeometryConstructor::SortVertices(const Face &unsorted) 
                 float b_pu = DotProduct(loc_b, a);
                 float b_pv = DotProduct(loc_b, b);
 
-                float a_angle = std::atan2f(a_pv, a_pu);
-                float b_angle = std::atan2f(b_pv, b_pu);
+                float a_angle = std::atan2(a_pv, a_pu);
+                float b_angle = std::atan2(b_pv, b_pu);
 
                 return a_angle > b_angle ? false : true;
              });

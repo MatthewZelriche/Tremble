@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <fstream>
 #include <iostream>
+#include <cstring>
 
 #include "math.hpp"
 #include "serialization.hpp"

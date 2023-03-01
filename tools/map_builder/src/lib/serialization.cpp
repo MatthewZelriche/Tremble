@@ -1,5 +1,6 @@
 #include "serialization.hpp"
 #include <fstream>
+#include <cstring>
 
 using namespace TR;
 

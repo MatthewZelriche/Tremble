@@ -13,7 +13,7 @@ class Window {
    Window();
    ~Window();
    Window(const Window &other) = delete;
-   Window &Window::operator=(const Window &other) = delete;
+   Window &operator=(const Window &other) = delete;
    GLFWwindow *GetHandle() { return mHandle; }
    void MakeContextCurrent() { glfwMakeContextCurrent(mHandle); }
 
