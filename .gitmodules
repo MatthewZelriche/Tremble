@@ -17,5 +17,5 @@
 	path = vendor/cereal
 	url = https://github.com/USCiLab/cereal.git
 [submodule "PhysX-Tremble"]
-	path = PhysX-Tremble
+	path = vendor/Physx-Tremble
 	url = https://github.com/MatthewZelriche/PhysX-Tremble.git
