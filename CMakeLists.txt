@@ -29,8 +29,8 @@ else()
 endif()
 
 ExternalProject_Add(Physx 
-    SOURCE_DIR ${PROJECT_SOURCE_DIR}/vendor/PhysX/physx/
-    CONFIGURE_COMMAND ${PROJECT_SOURCE_DIR}/vendor/PhysX/physx/generate_projects${PHYSX_BUILD_EXT} ${PHYSX_PRESET}
+    SOURCE_DIR ${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/
+    CONFIGURE_COMMAND ${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/generate_projects${PHYSX_BUILD_EXT} ${PHYSX_PRESET}
     BUILD_IN_SOURCE 1
     BUILD_COMMAND cmake --build ${PHYSX_CMAKELISTS} --config ${PHYSX_BUILD} ${ADD_COMMAND}
     INSTALL_COMMAND "") 
@@ -64,7 +64,7 @@ target_include_directories(Tremble PRIVATE "${PROJECT_SOURCE_DIR}/vendor/loguru/
                                            "${PROJECT_SOURCE_DIR}/vendor/glad"
                                            "${PROJECT_SOURCE_DIR}/vendor/glm"
                                            "${PROJECT_SOURCE_DIR}/tools/map_builder/src/lib/"
-                                           "${PROJECT_SOURCE_DIR}/vendor/PhysX/physx/include/")
+                                           "${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/include/")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     # Not set automatically on linux like MSVC does...needed for Physx
@@ -75,11 +75,11 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
     set(PHYX_BUILD_DIR_CONFIG "release")
 endif()
 if (MSVC)
-    set(PHYSX_BUILD_DIR "${PROJECT_SOURCE_DIR}/vendor/PhysX/physx/bin/win.x86_64.vc143.mt")
+    set(PHYSX_BUILD_DIR "${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/bin/win.x86_64.vc143.mt")
     set(PHYSX_LIB_PREFIX "")
     set(PHYSX_LIB_EXT ".lib")
 else()
-    set(PHYSX_BUILD_DIR "${PROJECT_SOURCE_DIR}/vendor/PhysX/physx/bin/linux.clang/${PHYX_BUILD_DIR_CONFIG}")
+    set(PHYSX_BUILD_DIR "${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/bin/linux.clang/${PHYX_BUILD_DIR_CONFIG}")
     set(PHYSX_LIB_PREFIX "lib")
     set(PHYSX_LIB_EXT ".so")
 endif()
