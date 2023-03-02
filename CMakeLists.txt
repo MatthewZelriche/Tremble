@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(Tremble LANGUAGES CXX)
 
-set(OUTPUT_DIR "${PROJECT_SOURCE_DIR}/build/bin/${CMAKE_BUILD_TYPE}")
+# Generator expr to force correct resolution of this dir for MSVC.
+set(OUTPUT_DIR "${PROJECT_SOURCE_DIR}/build/bin/${CMAKE_BUILD_TYPE}/$<0:>")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR})
@@ -75,7 +76,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
     set(PHYX_BUILD_DIR_CONFIG "release")
 endif()
 if (MSVC)
-    set(PHYSX_BUILD_DIR "${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/bin/win.x86_64.vc143.mt")
+    set(PHYSX_BUILD_DIR "${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/bin/win.x86_64.vc143.mt/${PHYX_BUILD_DIR_CONFIG}")
     set(PHYSX_LIB_PREFIX "")
     set(PHYSX_LIB_EXT ".lib")
 else()
@@ -92,6 +93,10 @@ target_link_libraries(Tremble PUBLIC
                         ${PHYSX_BUILD_DIR}/${PHYSX_LIB_PREFIX}PhysX_64${PHYSX_LIB_EXT}
                         ${PHYSX_BUILD_DIR}/${PHYSX_LIB_PREFIX}PhysXFoundation_64${PHYSX_LIB_EXT})
 
+# For MSVC, have to link with .lib, then change to copying .dll
+if (MSVC)
+    set(PHYSX_LIB_EXT ".dll")
+endif()
 # copy over the built Physx libraries as a post build step
 add_custom_command(TARGET Physx POST_BUILD
                     COMMAND ${CMAKE_COMMAND} -E copy

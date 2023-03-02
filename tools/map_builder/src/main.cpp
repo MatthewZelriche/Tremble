@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 
    std::cout << "Begin parsing " << mapPath << "..." << std::endl;
    try {
-      TR::MapFileParser parser = TR::MapFileParser(mapPath.filename().c_str());
+      TR::MapFileParser parser = TR::MapFileParser(mapPath.filename().string().c_str());
       std::cout << "Begin serializing binary data to file " << compiledPath << std::endl;
 
       // Restore original working dir
