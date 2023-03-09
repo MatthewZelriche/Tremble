@@ -69,7 +69,7 @@ class MapFileParser {
    bool mMapVersionDefined {false};
    std::vector<BrushEntity> mEntities;
 
-   std::vector<BuiltEntity> mBuiltEntities;
+   Map mMap;
 };
 
 } // namespace TR

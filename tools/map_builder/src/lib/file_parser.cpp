@@ -58,14 +58,14 @@ MapFileParser::MapFileParser(std::string_view filename) {
          }
       }
 
-      mBuiltEntities.push_back(built);
+      mMap.entities.push_back(built);
    }
 
    std::cout << "Successfully built geometry and finalized entities." << std::endl;
 }
 
 void MapFileParser::SaveToBinaryFile(std::string_view filename) {
-   SerializeToDisk(filename, mBuiltEntities);
+   SerializeToDisk(filename, mMap);
 }
 
 BrushEntity MapFileParser::ParseEntity(std::ifstream &entityDef) {

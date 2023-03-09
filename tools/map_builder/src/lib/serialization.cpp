@@ -4,7 +4,7 @@
 
 using namespace TR;
 
-void TR::SerializeToDisk(std::string_view filename, const SerializableData &data) {
+void TR::SerializeToDisk(std::string_view filename, const Map &data) {
    char hdr[8] = {0};
    std::memcpy(hdr, "TRMAP", 5);
 
@@ -13,10 +13,10 @@ void TR::SerializeToDisk(std::string_view filename, const SerializableData &data
    oarchive(cereal::binary_data(hdr, sizeof(char) * 8), data);
 }
 
-SerializableData TR::SerializeFromDisk(std::string_view filename) {
+Map TR::SerializeFromDisk(std::string_view filename) {
    char hdr[8] = {0};
 
-   SerializableData data;
+   Map data;
    std::ifstream file(filename.data(), std::ios::binary);
    cereal::BinaryInputArchive iarchive(file);
    iarchive(cereal::binary_data(hdr, sizeof(char) * 8), data);

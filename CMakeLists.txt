@@ -49,7 +49,6 @@ add_executable(Tremble src/core/main.cpp
                        src/io/input_manager.cpp
                        src/io/window.cpp
                        src/util/log.cpp
-                       src/world/map/map_file_parser.cpp
                        src/rendering/camera.cpp
                        src/rendering/naive_renderer.cpp
                        src/rendering/shader_program.cpp

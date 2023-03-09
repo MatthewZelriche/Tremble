@@ -35,9 +35,19 @@ template<class Archive>
 void serialize(Archive &archive, TR::BuiltEntity &entity) {
    archive(entity.properties, entity.geo);
 }
+
+template<class Archive>
+void serialize(Archive &archive, TR::Map &map, std::uint32_t const ver) {
+   if (ver != TR::MAP_VERS) {
+      throw std::runtime_error("Invalid trmap version: " +
+                               std::string(std::to_string(ver)));
+   }
+   archive(map.textureTable, map.entities);
+}
 } // namespace cereal
+CEREAL_CLASS_VERSION(TR::Map, TR::MAP_VERS);
 
 namespace TR {
-void SerializeToDisk(std::string_view filename, const SerializableData &data);
-SerializableData SerializeFromDisk(std::string_view filename);
+void SerializeToDisk(std::string_view filename, const Map &data);
+Map SerializeFromDisk(std::string_view filename);
 } // namespace TR

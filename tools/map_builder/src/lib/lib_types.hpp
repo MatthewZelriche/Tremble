@@ -47,6 +47,9 @@ struct BuiltEntity {
    std::optional<std::vector<std::vector<Face>>> geo;
 };
 
-using SerializableData = std::vector<BuiltEntity>;
-
+constexpr uint32_t MAP_VERS = 1;
+struct Map {
+   std::vector<std::string> textureTable;
+   std::vector<BuiltEntity> entities;
+};
 } // namespace TR
