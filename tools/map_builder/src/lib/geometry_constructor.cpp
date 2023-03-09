@@ -48,13 +48,13 @@ std::vector<Face> GeometryConstructor::Build(const Brush &brush) {
 
                      faces.at(i).vertices.push_back(datai);
                      faces.at(i).normalDir = brush.planes.at(i).equation.normal;
-                     faces.at(i).texturePath = brush.planes.at(i).texturePath;
+                     faces.at(i).textureID = brush.planes.at(i).textureID;
                      faces.at(j).vertices.push_back(dataj);
                      faces.at(j).normalDir = brush.planes.at(j).equation.normal;
-                     faces.at(j).texturePath = brush.planes.at(j).texturePath;
+                     faces.at(j).textureID = brush.planes.at(j).textureID;
                      faces.at(k).vertices.push_back(datak);
                      faces.at(k).normalDir = brush.planes.at(k).equation.normal;
-                     faces.at(k).texturePath = brush.planes.at(k).texturePath;
+                     faces.at(k).textureID = brush.planes.at(k).textureID;
                   }
                }
             }

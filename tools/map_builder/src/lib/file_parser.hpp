@@ -69,6 +69,9 @@ class MapFileParser {
    bool mMapVersionDefined {false};
    std::vector<BrushEntity> mEntities;
 
+   // Needed for fast lookup - increased memory, but this tool isn't perf or memory sensitive
+   std::unordered_map<std::string, uint32_t> mTextureIndices;
+
    Map mMap;
 };
 

@@ -73,7 +73,9 @@ Engine::Engine() {
    for (auto &entity : data.entities) {
       auto brushes = entity.geo.value_or(std::vector<std::vector<Face>>());
       for (auto &brush : brushes) {
-         for (auto &face : brush) { mRenderer->AddMapFace(face); }
+         for (auto &face : brush) {
+            mRenderer->AddMapFace(face, data.textureTable.at(face.textureID));
+         }
       }
    }
 

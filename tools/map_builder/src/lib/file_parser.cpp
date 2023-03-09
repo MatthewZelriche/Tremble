@@ -151,6 +151,17 @@ Plane MapFileParser::ParsePlane(std::string_view def) {
    size_t textureEnd = def.find(" ", hsEnd + 2);
    plane.texturePath = def.substr(hsEnd + 2, textureEnd - (hsEnd + 2));
 
+   // Store textures in texture table, recording and passing on texture ID.
+   int64_t idx = -1;
+   if (mTextureIndices.count(plane.texturePath) == 0) {
+      mMap.textureTable.push_back(plane.texturePath);
+      idx = mMap.textureTable.size() - 1;
+      mTextureIndices.insert({plane.texturePath, idx});
+   } else {
+      idx = mTextureIndices[plane.texturePath];
+   }
+   plane.textureID = idx;
+
    Vec3 p1;
    Vec3 p2;
    Vec3 p3;

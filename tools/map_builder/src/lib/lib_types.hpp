@@ -13,6 +13,7 @@ namespace TR {
 struct Plane {
    PlaneEq equation;
    std::string texturePath;
+   uint32_t textureID;
    std::array<Vec4, 2> uvs;
    float texRot {0};
    float uScale {0};
@@ -37,7 +38,7 @@ struct Face {
    Vec3 normalDir;
    // TODO: Store an array of texture paths once, and only put a texture id in here,
    // to save space and loading speed
-   std::string texturePath;
+   uint32_t textureID;
    std::vector<VertexData> vertices;
    std::vector<unsigned int> indices; // TODO: Performance considerations
 };
@@ -47,7 +48,7 @@ struct BuiltEntity {
    std::optional<std::vector<std::vector<Face>>> geo;
 };
 
-constexpr uint32_t MAP_VERS = 1;
+constexpr uint32_t MAP_VERS = 2;
 struct Map {
    std::vector<std::string> textureTable;
    std::vector<BuiltEntity> entities;

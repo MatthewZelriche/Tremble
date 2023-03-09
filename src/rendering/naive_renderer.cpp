@@ -84,7 +84,7 @@ unsigned int NaiveRenderer::LoadTexture(const std::string &path) {
    return texture;
 }
 
-void NaiveRenderer::AddMapFace(const Face &face) {
+void NaiveRenderer::AddMapFace(const Face &face, const std::string &tex) {
    unsigned int vao;
    mContext.GenVertexArrays(1, &vao);
    mContext.BindVertexArray(vao);
@@ -120,8 +120,8 @@ void NaiveRenderer::AddMapFace(const Face &face) {
    Renderable renderable;
    renderable.vao = vao;
    renderable.vertCount = face.indices.size();
-   renderable.textureHandle = LoadTexture(face.texturePath);
-   renderable.texturePath = face.texturePath;
+   renderable.textureHandle = LoadTexture(tex);
+   renderable.texturePath = tex;
    mVAOs.push_back(renderable);
 
    mContext.BindVertexArray(0);
