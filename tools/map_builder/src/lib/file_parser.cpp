@@ -45,6 +45,7 @@ MapFileParser::MapFileParser(std::string_view filename) {
    // Build geometry and finalize entities for serialization
    std::cout << "Building geometry from planes..." << std::endl;
    GeometryConstructor geoConstructor;
+   std::vector<BuiltBrush> builtBrushes;
    for (auto &ent : mEntities) {
       // Copy the properties no matter what
       BuiltEntity built;
@@ -52,13 +53,46 @@ MapFileParser::MapFileParser(std::string_view filename) {
 
       if (ent.brushes.size() > 0) {
          // Also need to build geo
-         built.geo = std::vector<std::vector<Face>>();
          for (auto &brush : ent.brushes) {
-            built.geo.value().push_back(geoConstructor.Build(brush));
+            // Build internal "built brush" object that isn't saved but
+            // is used to sort render data and generate physx collisions.
+            builtBrushes.push_back(geoConstructor.Build(brush));
          }
       }
 
       mMap.entities.push_back(built);
+   }
+
+   // Process all our built brushes
+   using Pair = std::pair<std::vector<VertexData>, std::vector<unsigned int>>;
+   std::unordered_map<uint32_t, Pair> vertSortMap;
+   for (auto &brush : builtBrushes) {
+      for (auto &face : brush) {
+         if (vertSortMap.count(face.textureID) == 0) {
+            vertSortMap.insert(
+                {face.textureID,
+                 {std::vector<VertexData>(), std::vector<unsigned int>()}});
+         }
+         auto &data = vertSortMap[face.textureID];
+         // Copy this face's vertex data into the right "bucket", sorting it according
+         // to texture
+         for (auto &vert : face.vertices) { data.first.push_back(vert); }
+         // Also have to copy over the indices, though these have to be adjusted
+         // Last index in a face is always the highest index
+         unsigned int startIdx = 0;
+         if (data.second.size() > 0) { startIdx = data.second.back() + 1; }
+         for (auto &index : face.indices) { data.second.push_back(index + startIdx); }
+      }
+      // TODO: Build convex colliders
+   }
+
+   // Install the built renderData
+   for (auto &entry : vertSortMap) {
+      MapRenderData data {0};
+      data.textureID = entry.first;
+      data.verts = entry.second.first;
+      data.indices = entry.second.second;
+      mMap.renderData.push_back(data);
    }
 
    std::cout << "Successfully built geometry and finalized entities." << std::endl;

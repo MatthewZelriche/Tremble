@@ -15,7 +15,7 @@ class GeometryConstructor {
   public:
    GeometryConstructor();
 
-   std::vector<Face> Build(const Brush &brush);
+   BuiltBrush Build(const Brush &brush);
 
   private:
    std::vector<unsigned int> GenerateIndices(const Face &face);

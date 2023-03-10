@@ -36,21 +36,32 @@ struct VertexData {
 
 struct Face {
    Vec3 normalDir;
-   // TODO: Store an array of texture paths once, and only put a texture id in here,
-   // to save space and loading speed
    uint32_t textureID;
    std::vector<VertexData> vertices;
    std::vector<unsigned int> indices; // TODO: Performance considerations
 };
 
+using BuiltBrush = std::vector<Face>;
+
+// TODO: Don't forget to modify serialization function
+struct ConvexCollider {};
+
 struct BuiltEntity {
    std::unordered_map<std::string, std::string> properties;
-   std::optional<std::vector<std::vector<Face>>> geo;
+   std::optional<std::vector<ConvexCollider>> collisionData;
 };
 
-constexpr uint32_t MAP_VERS = 2;
+// Sort vertices by texture to avoid texture binding overhead
+struct MapRenderData {
+   uint32_t textureID;
+   std::vector<VertexData> verts;
+   std::vector<unsigned int> indices;
+};
+
+constexpr uint32_t MAP_VERS = 3;
 struct Map {
    std::vector<std::string> textureTable;
+   std::vector<MapRenderData> renderData;
    std::vector<BuiltEntity> entities;
 };
 } // namespace TR

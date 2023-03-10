@@ -11,8 +11,8 @@ using namespace TR;
 
 GeometryConstructor::GeometryConstructor() {}
 
-std::vector<Face> GeometryConstructor::Build(const Brush &brush) {
-   std::vector<Face> faces;
+BuiltBrush GeometryConstructor::Build(const Brush &brush) {
+   BuiltBrush faces;
    size_t numPlanes = brush.planes.size();
    faces.resize(numPlanes);
 

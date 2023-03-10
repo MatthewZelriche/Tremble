@@ -32,8 +32,16 @@ void serialize(Archive &archive, TR::Face &face) {
 }
 
 template<class Archive>
+void serialize(Archive &archive, TR::ConvexCollider &collider) {}
+
+template<class Archive>
 void serialize(Archive &archive, TR::BuiltEntity &entity) {
-   archive(entity.properties, entity.geo);
+   archive(entity.properties, entity.collisionData);
+}
+
+template<class Archive>
+void serialize(Archive &archive, TR::MapRenderData &data) {
+   archive(data.textureID, data.verts, data.indices);
 }
 
 template<class Archive>
@@ -42,7 +50,7 @@ void serialize(Archive &archive, TR::Map &map, std::uint32_t const ver) {
       throw std::runtime_error("Invalid trmap version: " +
                                std::string(std::to_string(ver)));
    }
-   archive(map.textureTable, map.entities);
+   archive(map.textureTable, map.renderData, map.entities);
 }
 } // namespace cereal
 CEREAL_CLASS_VERSION(TR::Map, TR::MAP_VERS);

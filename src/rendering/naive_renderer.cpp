@@ -84,7 +84,7 @@ unsigned int NaiveRenderer::LoadTexture(const std::string &path) {
    return texture;
 }
 
-void NaiveRenderer::AddMapFace(const Face &face, const std::string &tex) {
+void NaiveRenderer::AddMapRenderable(const MapRenderData &data, const std::string &tex) {
    unsigned int vao;
    mContext.GenVertexArrays(1, &vao);
    mContext.BindVertexArray(vao);
@@ -97,16 +97,17 @@ void NaiveRenderer::AddMapFace(const Face &face, const std::string &tex) {
    mContext.GenBuffers(1, &ebo);
    mContext.BindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
    mContext.BufferData(GL_ELEMENT_ARRAY_BUFFER,
-                       face.indices.size() * sizeof(unsigned int), face.indices.data(),
+                       data.indices.size() * sizeof(unsigned int), data.indices.data(),
                        GL_STATIC_DRAW);
 
+   // TODO: Test if we can remove this nonsense
    std::vector<float> verts;
-   for (int i = 0; i < face.vertices.size(); i++) {
-      verts.push_back(face.vertices[i].vertices.x);
-      verts.push_back(face.vertices[i].vertices.y);
-      verts.push_back(face.vertices[i].vertices.z);
-      verts.push_back(face.vertices[i].uvs.x);
-      verts.push_back(face.vertices[i].uvs.y);
+   for (int i = 0; i < data.verts.size(); i++) {
+      verts.push_back(data.verts[i].vertices.x);
+      verts.push_back(data.verts[i].vertices.y);
+      verts.push_back(data.verts[i].vertices.z);
+      verts.push_back(data.verts[i].uvs.x);
+      verts.push_back(data.verts[i].uvs.y);
    }
    mContext.BufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(float), verts.data(),
                        GL_STATIC_DRAW);
@@ -119,7 +120,7 @@ void NaiveRenderer::AddMapFace(const Face &face, const std::string &tex) {
 
    Renderable renderable;
    renderable.vao = vao;
-   renderable.vertCount = face.indices.size();
+   renderable.vertCount = data.indices.size();
    renderable.textureHandle = LoadTexture(tex);
    renderable.texturePath = tex;
    mVAOs.push_back(renderable);

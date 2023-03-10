@@ -19,7 +19,7 @@ struct Renderable {
 class NaiveRenderer {
   public:
    NaiveRenderer();
-   void AddMapFace(const Face &face, const std::string &tex);
+   void AddMapRenderable(const MapRenderData &data, const std::string &tex);
 
    void Draw(const Camera &camera);
 

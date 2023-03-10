@@ -70,13 +70,8 @@ Engine::Engine() {
    // Testbed for map loading
    // Successfully loaded binary data into engine.
    Map data = SerializeFromDisk("output.trmap");
-   for (auto &entity : data.entities) {
-      auto brushes = entity.geo.value_or(std::vector<std::vector<Face>>());
-      for (auto &brush : brushes) {
-         for (auto &face : brush) {
-            mRenderer->AddMapFace(face, data.textureTable.at(face.textureID));
-         }
-      }
+   for (auto &renderable : data.renderData) {
+      mRenderer->AddMapRenderable(renderable, data.textureTable.at(renderable.textureID));
    }
 
    PxFoundation *mFoundation =
