@@ -9,21 +9,6 @@
 #include "../rendering/camera.hpp"
 
 #include "PxPhysicsAPI.h"
-#include "extensions/PxDefaultAllocator.h"
-
-using namespace physx;
-
-static PxDefaultAllocator gAllocator;
-
-class UserErrorCallback : public PxErrorCallback {
-  public:
-   virtual void reportError(PxErrorCode::Enum code, const char *message, const char *file,
-                            int line) {
-      // error processing implementation
-   }
-};
-
-static UserErrorCallback gCallback;
 
 using namespace TR;
 
@@ -64,6 +49,7 @@ Engine::Engine() {
    // Currently only one context, so have it always current
    mWindow->MakeContextCurrent();
    mRenderer = std::make_unique<NaiveRenderer>();
+   mPhysics = std::make_unique<PhysWorld>();
 
    camera = new Camera({0.0f, 0.0f, 3.0f}, 65.0f, 800.0f / 600.0f);
 
@@ -73,9 +59,6 @@ Engine::Engine() {
    for (auto &renderable : data.renderData) {
       mRenderer->AddMapRenderable(renderable, data.textureTable.at(renderable.textureID));
    }
-
-   PxFoundation *mFoundation =
-       PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gCallback);
 }
 
 void Engine::Run() {

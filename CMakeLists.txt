@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(PHYSX_BUILD "checked")
+    set(PHYSX_BUILD "debug")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(PHYSX_BUILD "release")
 endif()
@@ -48,6 +48,7 @@ add_executable(Tremble src/core/main.cpp
                        src/core/engine.cpp
                        src/io/input_manager.cpp
                        src/io/window.cpp
+                       src/physics/phys_world.cpp
                        src/util/log.cpp
                        src/rendering/camera.cpp
                        src/rendering/naive_renderer.cpp
@@ -64,24 +65,27 @@ target_include_directories(Tremble PRIVATE "${PROJECT_SOURCE_DIR}/vendor/loguru/
                                            "${PROJECT_SOURCE_DIR}/vendor/glad"
                                            "${PROJECT_SOURCE_DIR}/vendor/glm"
                                            "${PROJECT_SOURCE_DIR}/tools/map_builder/src/lib/"
-                                           "${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/include/")
+                                           "${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/include/"
+                                           "${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/pvdruntime/include")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     # Not set automatically on linux like MSVC does...needed for Physx
     add_compile_definitions(_DEBUG)
-    set(PHYX_BUILD_DIR_CONFIG "checked")
+    set(PHYX_BUILD_DIR_CONFIG "debug")
 endif()
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     set(PHYX_BUILD_DIR_CONFIG "release")
 endif()
 if (MSVC)
-    set(PHYSX_BUILD_DIR "${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/bin/win.x86_64.vc143.mt/${PHYX_BUILD_DIR_CONFIG}")
+    set(PHYSX_BUILD_DIR "${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/bin/win.x86_64.vc143.md/${PHYX_BUILD_DIR_CONFIG}")
     set(PHYSX_LIB_PREFIX "")
     set(PHYSX_LIB_EXT ".lib")
+    set(PHYSX_STATIC_EXT ".lib")
 else()
     set(PHYSX_BUILD_DIR "${PROJECT_SOURCE_DIR}/vendor/Physx-Tremble/physx/bin/linux.clang/${PHYX_BUILD_DIR_CONFIG}")
     set(PHYSX_LIB_PREFIX "lib")
     set(PHYSX_LIB_EXT ".so")
+    set(PHYSX_STATIC_EXT ".a")
 endif()
 
 message(${PHYSX_BUILD_DIR})
@@ -90,7 +94,9 @@ target_link_libraries(Tremble PUBLIC
                         TrembleMapParserLib
                         ${PHYSX_BUILD_DIR}/${PHYSX_LIB_PREFIX}PhysXCommon_64${PHYSX_LIB_EXT}
                         ${PHYSX_BUILD_DIR}/${PHYSX_LIB_PREFIX}PhysX_64${PHYSX_LIB_EXT}
-                        ${PHYSX_BUILD_DIR}/${PHYSX_LIB_PREFIX}PhysXFoundation_64${PHYSX_LIB_EXT})
+                        ${PHYSX_BUILD_DIR}/${PHYSX_LIB_PREFIX}PhysXFoundation_64${PHYSX_LIB_EXT}
+                        ${PHYSX_BUILD_DIR}/${PHYSX_LIB_PREFIX}PhysXExtensions_static_64${PHYSX_STATIC_EXT}
+                        ${PHYSX_BUILD_DIR}/${PHYSX_LIB_PREFIX}PhysXPvdSDK_static_64${PHYSX_STATIC_EXT})
 
 # For MSVC, have to link with .lib, then change to copying .dll
 if (MSVC)
@@ -109,6 +115,13 @@ add_custom_command(TARGET Physx POST_BUILD
                     COMMAND ${CMAKE_COMMAND} -E copy
                     ${PHYSX_BUILD_DIR}/${PHYSX_LIB_PREFIX}PhysXFoundation_64${PHYSX_LIB_EXT}
                     ${OUTPUT_DIR}/${PHYSX_LIB_PREFIX}PhysXFoundation_64${PHYSX_LIB_EXT})
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_custom_command(TARGET Physx POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy
+                    ${PHYSX_BUILD_DIR}/${PHYSX_LIB_PREFIX}PVDRuntime_64${PHYSX_LIB_EXT}
+                    ${OUTPUT_DIR}/${PHYSX_LIB_PREFIX}PVDRuntime_64${PHYSX_LIB_EXT})
+endif()
 
 # ugly hack to force this post build step to always occur
 add_custom_target(dummy_target ALL
