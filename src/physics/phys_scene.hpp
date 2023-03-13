@@ -14,6 +14,7 @@ constexpr float GRAV_SPEED = -800.0f;
 class PhysScene {
   public:
    PhysScene();
+   ~PhysScene();
    bool TimeToStep(float deltaTime);
    void BeginNewStep();
    bool TryFinishStep();
@@ -25,6 +26,7 @@ class PhysScene {
    physx::PxScene *mSceneHandle {nullptr};
    float mTimeAcc {0.0f};
    bool mDidCompletePrevStep {true};
+   void *mScratchMem {nullptr};
 
    static constexpr float STEP_INTERVAL = 1.0f / 60.0f;
    inline static physx::PxFoundation *mfoundation;

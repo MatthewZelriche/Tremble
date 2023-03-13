@@ -23,7 +23,12 @@ PhysScene::PhysScene() {
    sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(1);
    sceneDesc.filterShader = PxDefaultSimulationFilterShader;
    mSceneHandle = mPhysHandle->createScene(sceneDesc);
+
+   // 32 Kib of scratch space
+   mScratchMem = AlignedMalloc(32768);
 }
+
+PhysScene::~PhysScene() { AlignedFree(mScratchMem); }
 
 bool PhysScene::TimeToStep(float deltaTime) {
    mTimeAcc += deltaTime;
@@ -35,7 +40,7 @@ bool PhysScene::TimeToStep(float deltaTime) {
 void PhysScene::BeginNewStep() {
    // Previous Step completed, time for a new step.
    mTimeAcc -= STEP_INTERVAL;
-   mSceneHandle->simulate(STEP_INTERVAL);
+   mSceneHandle->simulate(STEP_INTERVAL, nullptr, mScratchMem, 32768);
    mDidCompletePrevStep = false;
 }
 
