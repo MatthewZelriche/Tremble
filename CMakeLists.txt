@@ -48,7 +48,7 @@ add_executable(Tremble src/core/main.cpp
                        src/core/engine.cpp
                        src/io/input_manager.cpp
                        src/io/window.cpp
-                       src/physics/phys_world.cpp
+                       src/physics/phys_scene.cpp
                        src/util/log.cpp
                        src/rendering/camera.cpp
                        src/rendering/naive_renderer.cpp

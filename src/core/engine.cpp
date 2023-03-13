@@ -8,8 +8,6 @@
 
 #include "../rendering/camera.hpp"
 
-#include "PxPhysicsAPI.h"
-
 using namespace TR;
 
 // Testing
@@ -49,7 +47,7 @@ Engine::Engine() {
    // Currently only one context, so have it always current
    mWindow->MakeContextCurrent();
    mRenderer = std::make_unique<NaiveRenderer>();
-   mPhysics = std::make_unique<PhysWorld>();
+   mActiveScene = std::make_unique<PhysScene>();
 
    camera = new Camera({0.0f, 0.0f, 3.0f}, 65.0f, 800.0f / 600.0f);
 
@@ -64,13 +62,34 @@ Engine::Engine() {
 void Engine::Run() {
    camera = new Camera({0.0f, 0.0f, 3.0f}, 65.0f, 800.0f / 600.0f);
    while (!mWindow->RequestedClose()) {
+      mFrameStartTime = glfwGetTime();
+
       glfwSwapBuffers(mWindow->GetHandle());
       mWindow->PollEvents();
       ProcKeys();
 
+      if (mActiveScene->TimeToStep(mDeltaTime)) {
+         // Try to finish the step, again, if we are still simulating
+         if (mActiveScene->IsSimulating() && !mActiveScene->TryFinishStep()) {
+            // Simulation can't catch up?
+            DLOG_F(ERROR, "Physics sim couldn't catch up in time! This is very bad!");
+         }
+
+         PhysicsUpdate(); // Apply changes to the simulation prior to its start
+         mActiveScene->BeginNewStep(); // Now we begin the simulation
+      }
+
       mRenderer->Draw(*camera);
       camera->Tick(0.3666f);
+
+      mActiveScene->TryFinishStep();
+      mFrameEndTime = glfwGetTime();
+      mDeltaTime = mFrameEndTime - mFrameStartTime;
    }
 
    DLOG_F(INFO, "Performing an orderly shutdown");
+}
+
+void Engine::PhysicsUpdate() {
+   DCHECK_F(!mActiveScene->IsSimulating(), "Attempt to modify physics state during sim!");
 }

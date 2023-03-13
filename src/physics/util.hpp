@@ -19,7 +19,7 @@ class PhysxAlloc : public physx::PxAllocatorCallback {
   public:
    virtual void *allocate(size_t size, const char *typeName, const char *filename,
                           int line) {
-      DLOG_F(INFO, "Physx allocating %d bytes for type (%s)", size, typeName);
+      //DLOG_F(INFO, "Physx allocating %d bytes for type (%s)", size, typeName);
 #ifdef _WIN64
       return _aligned_malloc(size, 16);
 #elif __linux__ && !__ANDROID__
