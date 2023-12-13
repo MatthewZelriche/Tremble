@@ -1,5 +1,7 @@
+#include "Tremble/c_api/test.hpp"
+
 #include <iostream>
 
-extern "C" void Test() {
+void Test() {
     std::cout << "Hello from CPP!" << std::endl;
 }
