@@ -17,6 +17,11 @@ add_subdirectory("vendor/fmt")
 add_library(Tremble SHARED  src/source_root.cpp
                             src/core/engine.cpp
                             src/c_api/core/engine.cpp)
+
+if (MSVC)
+    target_compile_options(Tremble PRIVATE /Zc:preprocessor)
+endif()
+
 target_link_libraries(Tremble fmt::fmt)
 
 generate_export_header(Tremble EXPORT_FILE_NAME ${PROJECT_SOURCE_DIR}/include/Tremble/core/tremble_export.hpp)
