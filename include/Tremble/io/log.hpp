@@ -42,6 +42,7 @@ void LogMessage(LogLevel level, std::string_view levelStr, fmt::text_style color
               loc.line());
    fmt::print(color, format, std::forward<Args>(args)...);
    fmt::println("");
+   std::fflush(stdout);
 }
 
 } // namespace TR
