@@ -8,7 +8,7 @@ class TREMBLE_EXPORT Engine {
   public:
    Engine();
 
-   void Update();
+   void Update(double delta);
 };
 
 } // namespace TR

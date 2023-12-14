@@ -6,4 +6,4 @@ using namespace TR;
 
 Engine::Engine() { TR_INFO("Initializing TrembleCPP Engine"); }
 
-void Engine::Update() {}
+void Engine::Update(double delta) {}

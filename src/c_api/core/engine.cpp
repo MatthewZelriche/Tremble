@@ -8,4 +8,8 @@ using namespace TR;
 extern "C" {
 
 hEngine *engine_create() { return reinterpret_cast<hEngine *>(new Engine()); }
+
+void engine_update(hEngine *handle, double delta) {
+   reinterpret_cast<Engine *>(handle)->Update(delta);
+}
 }

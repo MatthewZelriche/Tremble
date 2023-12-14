@@ -10,6 +10,7 @@ struct hEngine;
 typedef struct hEngine hEngine;
 
 TREMBLE_EXPORT hEngine *engine_create();
+TREMBLE_EXPORT void engine_update(hEngine *handle, double delta);
 
 #ifdef __cplusplus
 }
