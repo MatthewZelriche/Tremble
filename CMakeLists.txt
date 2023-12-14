@@ -16,3 +16,5 @@ target_link_libraries(Tremble fmt::fmt)
 generate_export_header(Tremble EXPORT_FILE_NAME ${PROJECT_SOURCE_DIR}/include/Tremble/core/tremble_export.hpp)
 
 target_include_directories(Tremble PUBLIC ${PROJECT_SOURCE_DIR}/include/)
+target_include_directories(Tremble PUBLIC ${PROJECT_SOURCE_DIR}/vendor/optional/include/
+                                          ${PROJECT_SOURCE_DIR}/vendor/expected/include/)
