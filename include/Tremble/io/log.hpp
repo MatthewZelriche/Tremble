@@ -19,16 +19,16 @@ enum LogLevel {
 
 #define TR_TRACE(format, ...)                                      \
    TR::LogMessage(LogLevel::Trace, "Trace", fg(fmt::color::white), \
-                  std::source_location::current(), format, __VA_ARGS__)
+                  std::source_location::current(), format __VA_OPT__(, ) __VA_ARGS__)
 #define TR_INFO(format, ...)                                      \
    TR::LogMessage(LogLevel::Info, "Info ", fg(fmt::color::white), \
-                  std::source_location::current(), format, __VA_ARGS__)
+                  std::source_location::current(), format __VA_OPT__(, ) __VA_ARGS__)
 #define TR_WARN(format, ...)                                       \
    TR::LogMessage(LogLevel::Warn, "Warn ", fg(fmt::color::yellow), \
-                  std::source_location::current(), format, __VA_ARGS__)
+                  std::source_location::current(), format __VA_OPT__(, ) __VA_ARGS__)
 #define TR_Error(format, ...)                                    \
    TR::LogMessage(LogLevel::Error, "Error", fg(fmt::color::red), \
-                  std::source_location::current(), format, __VA_ARGS__)
+                  std::source_location::current(), format __VA_OPT__(, ) __VA_ARGS__)
 
 template<class... Args>
 void LogMessage(LogLevel level, std::string_view levelStr, fmt::text_style color,
