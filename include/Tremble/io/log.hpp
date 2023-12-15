@@ -5,8 +5,7 @@
 #include <fmt/chrono.h>
 #include <string>
 #include <chrono>
-
-#include "Tremble/source_root.hpp"
+#include <filesystem>
 
 namespace TR {
 
@@ -35,8 +34,10 @@ void LogMessage(LogLevel level, std::string_view levelStr, fmt::text_style color
                 std::source_location loc, std::string_view format, Args &&...args) {
    using namespace std::chrono;
    auto ts = time_point_cast<milliseconds>(system_clock::now());
-   auto loc_view = std::string_view(loc.file_name());
-   auto substring = loc_view.substr(GetSourceRoot().length());
+   auto loc_view = std::filesystem::path(loc.file_name()).make_preferred().string();
+   size_t pos =
+       loc_view.rfind(std::filesystem::path("/Tremble/").make_preferred().string());
+   auto substring = loc_view.substr(pos + 9);
 
    fmt::print(color, "[{}] [{:%Y/%m/%d %H.%M.%S}] [{}:{}]: ", levelStr, ts, substring,
               loc.line());

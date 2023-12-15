@@ -14,7 +14,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${TR_OUTPUT_DIR}")
 
 add_subdirectory("vendor/fmt")
 
-add_library(Tremble SHARED  src/source_root.cpp
+add_library(Tremble SHARED  src/core/engine.cpp
                             src/core/engine.cpp
                             src/c_api/core/engine.cpp)
 

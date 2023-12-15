@@ -7,3 +7,9 @@
 [submodule "vendor/expected"]
 	path = vendor/expected
 	url = https://github.com/TartanLlama/expected.git
+[submodule "vendor/glfw"]
+	path = vendor/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "vendor/tomlplusplus"]
+	path = vendor/tomlplusplus
+	url = https://github.com/marzer/tomlplusplus.git
