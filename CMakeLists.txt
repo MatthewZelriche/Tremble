@@ -16,6 +16,7 @@ add_subdirectory("vendor/fmt")
 
 add_library(Tremble SHARED  src/core/engine.cpp
                             src/io/config.cpp
+                            src/io/window.cpp
                             src/c_api/core/engine.cpp)
 
 if (MSVC)
