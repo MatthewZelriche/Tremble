@@ -1,0 +1,3 @@
+[subsystems]
+window = true
+audio = true

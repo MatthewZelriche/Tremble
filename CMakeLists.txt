@@ -15,7 +15,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${TR_OUTPUT_DIR}")
 add_subdirectory("vendor/fmt")
 
 add_library(Tremble SHARED  src/core/engine.cpp
-                            src/core/engine.cpp
+                            src/io/config.cpp
                             src/c_api/core/engine.cpp)
 
 if (MSVC)
@@ -28,4 +28,5 @@ generate_export_header(Tremble EXPORT_FILE_NAME ${PROJECT_SOURCE_DIR}/include/Tr
 
 target_include_directories(Tremble PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 target_include_directories(Tremble PUBLIC ${PROJECT_SOURCE_DIR}/vendor/optional/include/
-                                          ${PROJECT_SOURCE_DIR}/vendor/expected/include/)
+                                          ${PROJECT_SOURCE_DIR}/vendor/expected/include/
+                                          ${PROJECT_SOURCE_DIR}/vendor/tomlplusplus/include/)
