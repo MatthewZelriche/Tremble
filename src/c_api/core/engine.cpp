@@ -18,6 +18,10 @@ TrembleError engine_create(hEngine **self) {
 
 void engine_destroy(hEngine *self) { delete self; }
 
+int engine_requested_shutdown(hEngine *self) {
+   return (int)reinterpret_cast<Engine *>(self)->RequestedShutdown();
+}
+
 void engine_update(hEngine *handle, double delta) {
    reinterpret_cast<Engine *>(handle)->Update(delta);
 }

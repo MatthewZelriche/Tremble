@@ -13,9 +13,10 @@ class TREMBLE_EXPORT Engine {
    Engine();
 
    void Update(double delta);
+   bool RequestedShutdown();
 
   private:
-   void InitializeSubsystems(const Subsystems &subsystemsConfig);
+   void InitializeSubsystems(const Config &config);
 
    tl::optional<Window> window = tl::nullopt;
 };

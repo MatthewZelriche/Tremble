@@ -15,11 +15,17 @@ struct Subsystems {
    bool audio = true;
 };
 
+struct WindowProps {
+   int resX = 1024;
+   int resY = 768;
+};
+
 class Config {
   public:
    Config(std::string_view configPath);
 
-   inline Subsystems GetParsedSubsystems() { return subsystems; }
+   inline Subsystems GetParsedSubsystems() const { return subsystems; }
+   inline WindowProps GetParsedWindowProperties() const { return windowProperties; }
 
   private:
    template<typename T>
@@ -36,6 +42,7 @@ class Config {
    }
    toml::parse_result table;
    Subsystems subsystems;
+   WindowProps windowProperties;
 };
 
 } // namespace TR

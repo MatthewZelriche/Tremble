@@ -12,6 +12,7 @@ typedef struct hEngine hEngine;
 
 TREMBLE_EXPORT TrembleError engine_create(hEngine **self);
 TREMBLE_EXPORT void engine_destroy(hEngine *self);
+TREMBLE_EXPORT int engine_requested_shutdown(hEngine *self);
 TREMBLE_EXPORT void engine_update(hEngine *handle, double delta);
 
 #ifdef __cplusplus

@@ -1,3 +1,7 @@
 [subsystems]
 window = true
 audio = true
+
+[window]
+resolutionX = 1280
+resolutionY = 1024
