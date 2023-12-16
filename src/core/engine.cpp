@@ -15,8 +15,6 @@ Engine::Engine() {
 void Engine::InitializeSubsystems(const Subsystems &subsystemsConfig) {
    // Optional subsystems
    if (subsystemsConfig.window) { window = Window(); }
-   window.map([](auto window) { window.Foo(); });
-   if (window) { window.value().Foo(); }
 
    // Required subsystems
 }

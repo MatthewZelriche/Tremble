@@ -25,7 +25,7 @@ enum LogLevel {
 #define TR_WARN(format, ...)                                       \
    TR::LogMessage(LogLevel::Warn, "Warn ", fg(fmt::color::yellow), \
                   std::source_location::current(), format __VA_OPT__(, ) __VA_ARGS__)
-#define TR_Error(format, ...)                                    \
+#define TR_ERROR(format, ...)                                    \
    TR::LogMessage(LogLevel::Error, "Error", fg(fmt::color::red), \
                   std::source_location::current(), format __VA_OPT__(, ) __VA_ARGS__)
 

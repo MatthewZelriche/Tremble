@@ -5,11 +5,12 @@ extern "C" {
 #endif
 
 #include "Tremble/core/tremble_export.hpp"
+#include "Tremble/c_api/error/tremble_error.hpp"
 
 struct hEngine;
 typedef struct hEngine hEngine;
 
-TREMBLE_EXPORT hEngine *engine_create();
+TREMBLE_EXPORT TrembleError engine_create(hEngine **self);
 TREMBLE_EXPORT void engine_update(hEngine *handle, double delta);
 
 #ifdef __cplusplus
